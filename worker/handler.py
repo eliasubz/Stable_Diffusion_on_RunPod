@@ -2,11 +2,13 @@
 
 Input:
   prompt (str, required), pet_image (base64 or http(s) URL, optional),
+  lora (URL or local path to a DreamBooth-LoRA .safetensors, optional), lora_scale (0-1),
   negative_prompt, ip_adapter_scale (0-1), steps, guidance_scale, width, height, seed
 Output:
-  image_base64 (PNG), seed, timings_ms {cold_load, fetch_input, inference, encode}
+  image_base64 (PNG), seed, timings_ms {cold_load, fetch_input, lora_load, inference, encode}
 """
 import base64
+import hashlib
 import io
 import os
 import time
@@ -16,6 +18,8 @@ import runpod
 import torch
 from diffusers import AutoencoderKL, StableDiffusionXLPipeline
 from PIL import Image
+
+from common import load_image
 
 MODEL_ID = os.environ.get("MODEL_ID", "stabilityai/stable-diffusion-xl-base-1.0")
 IP_ADAPTER_REPO = os.environ.get("IP_ADAPTER_REPO", "h94/IP-Adapter")
@@ -45,14 +49,34 @@ COLD_LOAD_MS = (time.perf_counter() - _t0) * 1000
 _first_request = True
 
 
-def load_image(src: str) -> Image.Image:
-    if src.startswith("http://") or src.startswith("https://"):
-        r = requests.get(src, timeout=30)
+LORA_CACHE = os.environ.get("LORA_CACHE", "/tmp/loras")
+_loaded_lora = None
+
+
+def fetch_lora(src: str) -> str:
+    if not (src.startswith("http://") or src.startswith("https://")):
+        return src
+    os.makedirs(LORA_CACHE, exist_ok=True)
+    path = os.path.join(LORA_CACHE, hashlib.sha1(src.encode()).hexdigest() + ".safetensors")
+    if not os.path.exists(path):
+        r = requests.get(src, timeout=120)
         r.raise_for_status()
-        data = r.content
-    else:
-        data = base64.b64decode(src.split(",", 1)[-1])  # tolerate data: URIs
-    return Image.open(io.BytesIO(data)).convert("RGB")
+        with open(path, "wb") as f:
+            f.write(r.content)
+    return path
+
+
+def ensure_lora(src, scale: float):
+    """Keep the last-used LoRA loaded so repeat requests for the same pet skip the swap."""
+    global _loaded_lora
+    if src != _loaded_lora:
+        if _loaded_lora:
+            pipe.unload_lora_weights()
+        if src:
+            pipe.load_lora_weights(fetch_lora(src), adapter_name="pet")
+        _loaded_lora = src
+    if src:
+        pipe.set_adapters(["pet"], adapter_weights=[scale])
 
 
 def handler(job):
@@ -68,6 +92,10 @@ def handler(job):
     t = time.perf_counter()
     pet = load_image(inp["pet_image"]) if inp.get("pet_image") else None
     timings["fetch_input"] = (time.perf_counter() - t) * 1000
+
+    t = time.perf_counter()
+    ensure_lora(inp.get("lora"), float(inp.get("lora_scale", 0.9)))
+    timings["lora_load"] = (time.perf_counter() - t) * 1000
 
     # Scale 0 disables the adapter for text-only requests.
     pipe.set_ip_adapter_scale(float(inp.get("ip_adapter_scale", 0.6)) if pet else 0.0)
