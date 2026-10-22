@@ -6,12 +6,14 @@ released when training ends.
 Input:
   images (list of base64 or http(s) URLs, required), class_word ("cat" / "dog"),
   token (rare identifier, default "sks"), steps, learning_rate, rank, resolution,
-  prior_preservation (bool, slower), seed
+  prior_preservation (bool, slower), seed, checkpoint_every (also keep LoRAs from earlier steps)
 Output:
   lora_url (when S3_* env is set) or lora_path (local / Colab), instance_prompt,
-  timings_ms {prep, train, upload, total}
+  timings_ms {prep, train, upload, total}, step_times_s {step: seconds into training},
+  checkpoints {step: local path} (with checkpoint_every)
 """
 import collections
+import glob
 import os
 import re
 import shutil
@@ -46,11 +48,15 @@ KEY_LINES = ("Running training", "Num examples", "Total optimization steps", "Tr
 
 
 def run_training(cmd, progress=None):
-    """Run the training script, printing compact progress. Returns (returncode, last 200 log lines)."""
+    """Run the training script, printing compact progress.
+
+    Returns (returncode, last 200 log lines, {step: seconds since launch} for each printed step).
+    """
     env = {**os.environ, "PYTHONUNBUFFERED": "1", "TRANSFORMERS_VERBOSITY": "error", "DIFFUSERS_VERBOSITY": "error"}
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env, text=True, bufsize=1)
     tail = collections.deque(maxlen=200)
     last_step, buf = -1, ""
+    t0, step_times = time.perf_counter(), {}
 
     # tqdm redraws with \r, so split on both \r and \n
     for chunk in iter(lambda: proc.stdout.read(256), ""):
@@ -63,6 +69,7 @@ def run_training(cmd, progress=None):
                 step, total = int(m[1]), int(m[2])
                 if step != last_step and (step % max(1, total // 20) == 0 or step == total):
                     last_step = step
+                    step_times[step] = round(time.perf_counter() - t0, 1)
                     speed = f"{m[5]} {m[6]}"
                     loss = f"  loss {float(m[7]):.4f}" if m[7] else ""
                     msg = f"{step:>4}/{total} ({step / total:4.0%})  {speed}{loss}  elapsed {m[3]}  eta {m[4]}"
@@ -72,7 +79,33 @@ def run_training(cmd, progress=None):
             elif any(k in line for k in KEY_LINES):
                 print(f"[train] {line}", flush=True)
 
-    return proc.wait(), list(tail)
+    return proc.wait(), list(tail), step_times
+
+
+def to_fp16(path: str):
+    """Halve the LoRA file size (diffusers saves fp32); no visible quality difference."""
+    from safetensors import safe_open
+    from safetensors.torch import save_file
+
+    with safe_open(path, framework="pt") as f:
+        tensors = {k: f.get_tensor(k).half() for k in f.keys()}
+        metadata = f.metadata()
+    save_file(tensors, path, metadata=metadata)
+
+
+def collect_checkpoints(out_dir: str) -> dict:
+    """Keep only the LoRA weights from each checkpoint-N dir (drops optimizer/scheduler state)."""
+    found = {}
+    for ckpt in glob.glob(os.path.join(out_dir, "checkpoint-*")):
+        step = int(ckpt.rsplit("-", 1)[1])
+        src = os.path.join(ckpt, "pytorch_lora_weights.safetensors")
+        if os.path.exists(src):
+            dst = os.path.join(out_dir, f"lora-step{step}.safetensors")
+            shutil.move(src, dst)
+            to_fp16(dst)
+            found[step] = dst
+        shutil.rmtree(ckpt, ignore_errors=True)
+    return dict(sorted(found.items()))
 
 
 def upload(path: str, key: str):
@@ -137,7 +170,7 @@ def train(inp: dict, progress=None) -> dict:
         "--lr_warmup_steps=0",
         f"--max_train_steps={int(inp.get('steps', 500))}",
         f"--rank={int(inp.get('rank', 8))}",
-        "--checkpointing_steps=100000",  # no intermediate checkpoints
+        f"--checkpointing_steps={int(inp.get('checkpoint_every', 100000))}",  # default: none
         f"--seed={int(inp.get('seed', 0))}",
     ]
     if inp.get("prior_preservation"):
@@ -152,7 +185,7 @@ def train(inp: dict, progress=None) -> dict:
     print(f"[train] {len(images)} photos, {instance_prompt!r}, {resolution}px, "
           f"{inp.get('steps', 500)} steps, rank {inp.get('rank', 8)}", flush=True)
     t = time.perf_counter()
-    returncode, log = run_training(cmd, progress)
+    returncode, log, step_times = run_training(cmd, progress)
     timings["train"] = (time.perf_counter() - t) * 1000
     shutil.rmtree(work, ignore_errors=True)
     if returncode != 0:
@@ -160,6 +193,8 @@ def train(inp: dict, progress=None) -> dict:
         return {"error": "training failed", "log_tail": "\n".join(log[-40:])}
 
     lora_path = os.path.join(out_dir, "pytorch_lora_weights.safetensors")
+    to_fp16(lora_path)
+    checkpoints = collect_checkpoints(out_dir)
     t = time.perf_counter()
     lora_url = upload(lora_path, f"loras/{run_id}.safetensors")
     timings["upload"] = (time.perf_counter() - t) * 1000
@@ -167,8 +202,10 @@ def train(inp: dict, progress=None) -> dict:
 
     print(f"[train] done: {timings['train'] / 60000:.1f} min training, {timings['total'] / 60000:.1f} min total, "
           f"LoRA {os.path.getsize(lora_path) / 1e6:.0f} MB", flush=True)
-    out = {"instance_prompt": instance_prompt, "timings_ms": timings,
+    out = {"instance_prompt": instance_prompt, "timings_ms": timings, "step_times_s": step_times,
            "size_mb": os.path.getsize(lora_path) / 1e6}
+    if checkpoints:
+        out["checkpoints"] = checkpoints
     if lora_url:
         out["lora_url"] = lora_url
     else:

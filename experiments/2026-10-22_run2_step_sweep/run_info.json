@@ -1,0 +1,74 @@
+{
+ "gpu": "Tesla T4",
+ "vram_gb": 15.6,
+ "train_cfg": {
+  "steps": 500,
+  "checkpoint_every": 50,
+  "rank": 8,
+  "learning_rate": 0.0001,
+  "resolution": 768
+ },
+ "train_photos": [
+  "Boss1.jpeg",
+  "Boss2.jpeg",
+  "Boss3.jpeg",
+  "Boss5.jpeg",
+  "Boss6.jpeg",
+  "Boss7.jpeg"
+ ],
+ "holdout_photos": [
+  "Boss4.jpeg",
+  "Boss8.jpeg"
+ ],
+ "ip_photo": "Boss2.jpeg",
+ "gen": {
+  "width": 768,
+  "height": 768,
+  "steps": 25
+ },
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "scenes": [
+  "as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "as an astronaut on the moon, wearing a space helmet, cinematic",
+  "as a chef in a busy kitchen, wearing a chef hat, funny",
+  "sitting on a throne like a king, wearing a crown, oil painting"
+ ],
+ "train": {
+  "instance_prompt": "a photo of sks cat",
+  "timings_ms": {
+   "prep": 2011.778445999994,
+   "train": 979430.7370869999,
+   "upload": 0.03552999987732619,
+   "total": 982710.6027339998
+  },
+  "step_times_s": {
+   "25": 129.6,
+   "50": 173.2,
+   "75": 217.3,
+   "100": 261.8,
+   "125": 303.8,
+   "150": 350.3,
+   "175": 392.3,
+   "200": 438.3,
+   "225": 480.7,
+   "250": 526.7,
+   "275": 569.2,
+   "300": 615.2,
+   "325": 657.7,
+   "350": 703.7,
+   "375": 746.2,
+   "400": 792.1,
+   "425": 837.6,
+   "450": 880.5,
+   "475": 924.3,
+   "500": 968.1
+  },
+  "size_mb": 23.390424,
+  "lora_path": "/kaggle/working/run2/loras/boss-run2/pytorch_lora_weights.safetensors"
+ },
+ "total_min": 53.1
+}
