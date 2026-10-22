@@ -163,23 +163,9 @@ import matplotlib  # noqa: E402
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-s = summary.reset_index()
-fig, ax = plt.subplots(figsize=(8, 6))
-for method, color in [("text_only", "#888888"), ("ip_adapter", "#d62728"), ("lora", "#1f77b4")]:
-    g = s[s.method == method].sort_values("param")
-    sem = lambda c: g[f"{c}_std"] / g["n"] ** 0.5  # noqa: E731
-    ax.errorbar(g.clip_t_mean, g.dino_crop_mean, xerr=sem("clip_t"), yerr=sem("dino_crop"),
-                fmt="-o", color=color, label=method, capsize=3)
-    for _, r in g.iterrows():
-        label = {"ip_adapter": f"scale {r.param}", "lora": f"{int(r.param)} steps ({r.train_min:.1f} min)"}.get(method)
-        if label:
-            ax.annotate(label, (r.clip_t_mean, r.dino_crop_mean), textcoords="offset points", xytext=(6, 4), fontsize=8)
-ax.set_xlabel("prompt adherence (CLIP-T) →")
-ax.set_ylabel("identity on held-out photos (DINO, pet crop) →")
-ax.set_title(f"LoRA training steps vs. IP-Adapter scale ({gpu})")
-ax.legend()
-plt.tight_layout()
-plt.savefig(f"{OUT}/tradeoff.png", dpi=120)
+from eval.tradeoff_plot import plot_tradeoff  # noqa: E402
+
+plot_tradeoff(summary, f"{OUT}/tradeoff.png", f"LoRA training steps vs. IP-Adapter scale ({gpu})")
 
 # Grid: one row per config, one column per scene (seed 1)
 cfgs = [(m, p) for m, p, _ in configs]
