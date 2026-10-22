@@ -1,0 +1,127 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "size": 1024,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "scenes": [
+  "as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "as an astronaut on the moon, wearing a space helmet, cinematic",
+  "as a chef in a busy kitchen, wearing a chef hat, funny",
+  "sitting on a throne like a king, wearing a crown, oil painting"
+ ],
+ "pet_lora": "boss-step250.safetensors",
+ "pet_lora_scale": 0.9,
+ "configs": {
+  "base25": [
+   null,
+   "euler",
+   25,
+   6.0,
+   false,
+   false
+  ],
+  "base25_fused": [
+   null,
+   "euler",
+   25,
+   6.0,
+   true,
+   false
+  ],
+  "base12_fused": [
+   null,
+   "euler",
+   12,
+   6.0,
+   true,
+   false
+  ],
+  "lcm4": [
+   "lcm",
+   "lcm",
+   4,
+   1.0,
+   true,
+   false
+  ],
+  "lcm8": [
+   "lcm",
+   "lcm",
+   8,
+   1.0,
+   true,
+   false
+  ],
+  "lightning4": [
+   "lightning4",
+   "trailing",
+   4,
+   0.0,
+   true,
+   false
+  ],
+  "lightning8": [
+   "lightning8",
+   "trailing",
+   8,
+   0.0,
+   true,
+   false
+  ],
+  "lightning4_compiled": [
+   "lightning4",
+   "trailing",
+   4,
+   0.0,
+   true,
+   true
+  ]
+ },
+ "per_config": {
+  "base25": {
+   "peak_mem_gb": 9.64,
+   "warmup_s": 23.0,
+   "compile_s": 0.0
+  },
+  "base25_fused": {
+   "peak_mem_gb": 9.64,
+   "warmup_s": 23.7,
+   "compile_s": 0.0
+  },
+  "base12_fused": {
+   "peak_mem_gb": 9.64,
+   "warmup_s": 11.8,
+   "compile_s": 0.0
+  },
+  "lcm4": {
+   "peak_mem_gb": 10.04,
+   "warmup_s": 2.9,
+   "compile_s": 0.0
+  },
+  "lcm8": {
+   "peak_mem_gb": 10.04,
+   "warmup_s": 4.8,
+   "compile_s": 0.0
+  },
+  "lightning4": {
+   "peak_mem_gb": 10.04,
+   "warmup_s": 2.8,
+   "compile_s": 0.0
+  },
+  "lightning8": {
+   "peak_mem_gb": 10.04,
+   "warmup_s": 4.8,
+   "compile_s": 0.0
+  },
+  "lightning4_compiled": {
+   "peak_mem_gb": 10.04,
+   "warmup_s": 124.2,
+   "compile_s": 124.2
+  }
+ },
+ "total_min": 23.3
+}

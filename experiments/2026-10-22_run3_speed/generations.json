@@ -1,0 +1,770 @@
+[
+ {
+  "config": "base25",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_0_1.png",
+  "latency_ms": 21885.193514000035
+ },
+ {
+  "config": "base25",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_0_2.png",
+  "latency_ms": 22809.058265000032
+ },
+ {
+  "config": "base25",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_0_3.png",
+  "latency_ms": 23661.754927999995
+ },
+ {
+  "config": "base25",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_1_1.png",
+  "latency_ms": 24917.224256999987
+ },
+ {
+  "config": "base25",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_1_2.png",
+  "latency_ms": 26333.206896000036
+ },
+ {
+  "config": "base25",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_1_3.png",
+  "latency_ms": 25565.68471999992
+ },
+ {
+  "config": "base25",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_2_1.png",
+  "latency_ms": 24926.016645000003
+ },
+ {
+  "config": "base25",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_2_2.png",
+  "latency_ms": 25141.335512999944
+ },
+ {
+  "config": "base25",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_2_3.png",
+  "latency_ms": 25662.43680299999
+ },
+ {
+  "config": "base25",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_3_1.png",
+  "latency_ms": 25450.854658999902
+ },
+ {
+  "config": "base25",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_3_2.png",
+  "latency_ms": 25251.50180800006
+ },
+ {
+  "config": "base25",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_3_3.png",
+  "latency_ms": 25182.008311999994
+ },
+ {
+  "config": "base25_fused",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_0_1.png",
+  "latency_ms": 23905.08645
+ },
+ {
+  "config": "base25_fused",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_0_2.png",
+  "latency_ms": 23433.587153000077
+ },
+ {
+  "config": "base25_fused",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_0_3.png",
+  "latency_ms": 23407.62699300001
+ },
+ {
+  "config": "base25_fused",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_1_1.png",
+  "latency_ms": 23777.436922999983
+ },
+ {
+  "config": "base25_fused",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_1_2.png",
+  "latency_ms": 23732.331620999958
+ },
+ {
+  "config": "base25_fused",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base25_fused_1_3.png",
+  "latency_ms": 23599.978487000044
+ },
+ {
+  "config": "base25_fused",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_fused_2_1.png",
+  "latency_ms": 23565.84026799999
+ },
+ {
+  "config": "base25_fused",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_fused_2_2.png",
+  "latency_ms": 23543.61703099994
+ },
+ {
+  "config": "base25_fused",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base25_fused_2_3.png",
+  "latency_ms": 23521.041377000074
+ },
+ {
+  "config": "base25_fused",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_fused_3_1.png",
+  "latency_ms": 23604.176894000033
+ },
+ {
+  "config": "base25_fused",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_fused_3_2.png",
+  "latency_ms": 23743.57441699999
+ },
+ {
+  "config": "base25_fused",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base25_fused_3_3.png",
+  "latency_ms": 23719.227241999986
+ },
+ {
+  "config": "base12_fused",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_0_1.png",
+  "latency_ms": 11911.148993000097
+ },
+ {
+  "config": "base12_fused",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_0_2.png",
+  "latency_ms": 11949.464315000114
+ },
+ {
+  "config": "base12_fused",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_0_3.png",
+  "latency_ms": 11908.351619999848
+ },
+ {
+  "config": "base12_fused",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_1_1.png",
+  "latency_ms": 11891.39193699998
+ },
+ {
+  "config": "base12_fused",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_1_2.png",
+  "latency_ms": 11857.989653000004
+ },
+ {
+  "config": "base12_fused",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/base12_fused_1_3.png",
+  "latency_ms": 11859.425639000165
+ },
+ {
+  "config": "base12_fused",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base12_fused_2_1.png",
+  "latency_ms": 11822.798631000069
+ },
+ {
+  "config": "base12_fused",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base12_fused_2_2.png",
+  "latency_ms": 11793.707223999945
+ },
+ {
+  "config": "base12_fused",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/base12_fused_2_3.png",
+  "latency_ms": 11798.14759099986
+ },
+ {
+  "config": "base12_fused",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base12_fused_3_1.png",
+  "latency_ms": 11792.846073000192
+ },
+ {
+  "config": "base12_fused",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base12_fused_3_2.png",
+  "latency_ms": 11817.788247999943
+ },
+ {
+  "config": "base12_fused",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/base12_fused_3_3.png",
+  "latency_ms": 11820.756669000048
+ },
+ {
+  "config": "lcm4",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_0_1.png",
+  "latency_ms": 2800.0314780001645
+ },
+ {
+  "config": "lcm4",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_0_2.png",
+  "latency_ms": 2828.104936000045
+ },
+ {
+  "config": "lcm4",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_0_3.png",
+  "latency_ms": 2826.145767999833
+ },
+ {
+  "config": "lcm4",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_1_1.png",
+  "latency_ms": 2855.043599000055
+ },
+ {
+  "config": "lcm4",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_1_2.png",
+  "latency_ms": 2878.451873000131
+ },
+ {
+  "config": "lcm4",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm4_1_3.png",
+  "latency_ms": 2911.274654999943
+ },
+ {
+  "config": "lcm4",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm4_2_1.png",
+  "latency_ms": 2928.654646000041
+ },
+ {
+  "config": "lcm4",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm4_2_2.png",
+  "latency_ms": 2957.199289000073
+ },
+ {
+  "config": "lcm4",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm4_2_3.png",
+  "latency_ms": 2974.8313000000053
+ },
+ {
+  "config": "lcm4",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm4_3_1.png",
+  "latency_ms": 2985.436416000084
+ },
+ {
+  "config": "lcm4",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm4_3_2.png",
+  "latency_ms": 2997.2343069998715
+ },
+ {
+  "config": "lcm4",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm4_3_3.png",
+  "latency_ms": 2985.488031999921
+ },
+ {
+  "config": "lcm8",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_0_1.png",
+  "latency_ms": 4824.518749000163
+ },
+ {
+  "config": "lcm8",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_0_2.png",
+  "latency_ms": 4849.566350999794
+ },
+ {
+  "config": "lcm8",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_0_3.png",
+  "latency_ms": 4876.719008000009
+ },
+ {
+  "config": "lcm8",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_1_1.png",
+  "latency_ms": 4875.7139300000745
+ },
+ {
+  "config": "lcm8",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_1_2.png",
+  "latency_ms": 4854.89163200009
+ },
+ {
+  "config": "lcm8",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lcm8_1_3.png",
+  "latency_ms": 4820.826479000061
+ },
+ {
+  "config": "lcm8",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm8_2_1.png",
+  "latency_ms": 4804.941446999919
+ },
+ {
+  "config": "lcm8",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm8_2_2.png",
+  "latency_ms": 4778.108779000149
+ },
+ {
+  "config": "lcm8",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lcm8_2_3.png",
+  "latency_ms": 4771.665557000006
+ },
+ {
+  "config": "lcm8",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm8_3_1.png",
+  "latency_ms": 4753.212517000065
+ },
+ {
+  "config": "lcm8",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm8_3_2.png",
+  "latency_ms": 4744.83034800005
+ },
+ {
+  "config": "lcm8",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lcm8_3_3.png",
+  "latency_ms": 4737.501887999997
+ },
+ {
+  "config": "lightning4",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_0_1.png",
+  "latency_ms": 2782.2331580000537
+ },
+ {
+  "config": "lightning4",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_0_2.png",
+  "latency_ms": 2811.0740869999518
+ },
+ {
+  "config": "lightning4",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_0_3.png",
+  "latency_ms": 2837.4382179999884
+ },
+ {
+  "config": "lightning4",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_1_1.png",
+  "latency_ms": 2863.2521279998855
+ },
+ {
+  "config": "lightning4",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_1_2.png",
+  "latency_ms": 2878.9133070001753
+ },
+ {
+  "config": "lightning4",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_1_3.png",
+  "latency_ms": 2917.2975599999518
+ },
+ {
+  "config": "lightning4",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_2_1.png",
+  "latency_ms": 2945.460742000023
+ },
+ {
+  "config": "lightning4",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_2_2.png",
+  "latency_ms": 2970.7911570001215
+ },
+ {
+  "config": "lightning4",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_2_3.png",
+  "latency_ms": 3004.494445000091
+ },
+ {
+  "config": "lightning4",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_3_1.png",
+  "latency_ms": 3012.3315460000413
+ },
+ {
+  "config": "lightning4",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_3_2.png",
+  "latency_ms": 3030.295760000172
+ },
+ {
+  "config": "lightning4",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_3_3.png",
+  "latency_ms": 3022.2808040000473
+ },
+ {
+  "config": "lightning8",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_0_1.png",
+  "latency_ms": 4851.194314000168
+ },
+ {
+  "config": "lightning8",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_0_2.png",
+  "latency_ms": 4865.884477000009
+ },
+ {
+  "config": "lightning8",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_0_3.png",
+  "latency_ms": 4884.953828999869
+ },
+ {
+  "config": "lightning8",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_1_1.png",
+  "latency_ms": 4860.710019999942
+ },
+ {
+  "config": "lightning8",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_1_2.png",
+  "latency_ms": 4820.546442000023
+ },
+ {
+  "config": "lightning8",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning8_1_3.png",
+  "latency_ms": 4777.218837999953
+ },
+ {
+  "config": "lightning8",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning8_2_1.png",
+  "latency_ms": 4758.5734029999
+ },
+ {
+  "config": "lightning8",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning8_2_2.png",
+  "latency_ms": 4740.805185999989
+ },
+ {
+  "config": "lightning8",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning8_2_3.png",
+  "latency_ms": 4728.482252000049
+ },
+ {
+  "config": "lightning8",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning8_3_1.png",
+  "latency_ms": 4717.440353000029
+ },
+ {
+  "config": "lightning8",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning8_3_2.png",
+  "latency_ms": 4719.359752999935
+ },
+ {
+  "config": "lightning8",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning8_3_3.png",
+  "latency_ms": 4714.314711000043
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 0,
+  "seed": 1,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_0_1.png",
+  "latency_ms": 2569.2464339999788
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 0,
+  "seed": 2,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_0_2.png",
+  "latency_ms": 2589.2345349998322
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 0,
+  "seed": 3,
+  "prompt": "a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_0_3.png",
+  "latency_ms": 2567.690133000042
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 1,
+  "seed": 1,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_1_1.png",
+  "latency_ms": 2577.558041999964
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 1,
+  "seed": 2,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_1_2.png",
+  "latency_ms": 2595.4399430002013
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 1,
+  "seed": 3,
+  "prompt": "a cat as an astronaut on the moon, wearing a space helmet, cinematic",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_1_3.png",
+  "latency_ms": 2614.2302499999914
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 2,
+  "seed": 1,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_2_1.png",
+  "latency_ms": 2631.1942129998442
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 2,
+  "seed": 2,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_2_2.png",
+  "latency_ms": 2648.0161300000873
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 2,
+  "seed": 3,
+  "prompt": "a cat as a chef in a busy kitchen, wearing a chef hat, funny",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_2_3.png",
+  "latency_ms": 2669.8750369998834
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 3,
+  "seed": 1,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_3_1.png",
+  "latency_ms": 2691.6171799998665
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 3,
+  "seed": 2,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_3_2.png",
+  "latency_ms": 2743.2880419999037
+ },
+ {
+  "config": "lightning4_compiled",
+  "scene": 3,
+  "seed": 3,
+  "prompt": "a cat sitting on a throne like a king, wearing a crown, oil painting",
+  "path": "/kaggle/working/run3/images/lightning4_compiled_3_3.png",
+  "latency_ms": 2750.9588089999397
+ }
+]
