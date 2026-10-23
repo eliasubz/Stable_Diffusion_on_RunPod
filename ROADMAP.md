@@ -27,9 +27,11 @@
 - [ ] Individual identity metric (animal re-ID embedding), validated with the real-photo margin test
 - [x] Run 6: profiled training; own loop `train_fast.py` is 2.34× faster per step (cached VAE latents −37%, no grad checkpointing −32%, fused AdamW; 8-bit Adam is slower for LoRA). 250-step LoRA in ~4.0 min vs ~8.8 min on a T4, same quality
 - [x] Run 7: cast fix (no gain), torch.compile (−2%, 5 min compile), time to plateau 220 s → 56 s with 512px / batch 4 / lr 4e-4 (~1.7 min to a usable LoRA on a T4 incl. loading). Batching only helps without grad checkpointing
-- [ ] Pick the training config visually (512/bs4/4e-4 at 56 s vs 768/bs1/2e-4 at 147 s; double-cat artifact in the chef scene)
+- [x] **Production training config: 512px, batch 4, LR 4e-4, 200 images** (fastest, ~56 s on a T4)
 - [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
-- [ ] Optional deep dives: Triton attention-backward kernel for sm75 (≤ ~8% of a step), W8A8 INT8 matmuls (matmul is 44% of a step)
+- [ ] Run 9: QLoRA (fp16 / int8 / nf4 frozen UNet) + INT8 GEMM feasibility on the T4
+- [ ] **Research direction: INT8 training for per-user diffusion LoRA on INT8-only GPUs** (T4: no bf16/fp8). Frozen base → only input-gradients go through INT8 GEMMs; metric = time-to-identity. Go/no-go from run 9's GEMM benchmark; literature check (QLoRA, EfficientDM, SwitchBack) before claiming novelty
+- [ ] Optional: Triton attention-backward kernel for sm75 (≤ ~8% of a step)
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod): matching torchao build, quantize only transformer-block linears
