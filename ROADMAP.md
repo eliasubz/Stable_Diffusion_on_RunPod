@@ -29,8 +29,8 @@
 - [x] Run 7: cast fix (no gain), torch.compile (−2%, 5 min compile), time to plateau 220 s → 56 s with 512px / batch 4 / lr 4e-4 (~1.7 min to a usable LoRA on a T4 incl. loading). Batching only helps without grad checkpointing
 - [x] **Production training config: 512px, batch 4, LR 4e-4, 200 images** (fastest, ~56 s on a T4)
 - [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
-- [ ] Run 9: QLoRA (fp16 / int8 / nf4 frozen UNet) + INT8 GEMM feasibility on the T4
-- [ ] **Research direction: INT8 training for per-user diffusion LoRA on INT8-only GPUs** (T4: no bf16/fp8). Frozen base → only input-gradients go through INT8 GEMMs; metric = time-to-identity. Go/no-go from run 9's GEMM benchmark; literature check (QLoRA, EfficientDM, SwitchBack) before claiming novelty
+- [x] Run 9: INT8 GEMMs on the T4 are 0.36–0.65× of fp16 (PyTorch `_int_mm` on sm75), so **INT8 training on a T4 is a no-go** with current tooling. QLoRA: nf4 +45% slower, −1.8 GB only; bnb int8 2.9× slower. nf4-trained LoRA transfers to the fp16 base
+- [ ] Research direction INT8/fp8 training for per-user LoRA: revisit on Ampere+ (L4 / 4090 / A100 on RunPod), with the same GEMM go/no-go benchmark first
 - [ ] Optional: Triton attention-backward kernel for sm75 (≤ ~8% of a step)
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
