@@ -10,6 +10,11 @@ LoRA format. What can be switched on or off:
   cache_text      encode the fixed instance prompt once (the script already does this)
   optimizer       "adamw" | "adamw_fused" | "adamw8bit" (bitsandbytes, falls back to adamw_fused)
   grad_ckpt       gradient checkpointing in the UNet (saves memory, costs recompute)
+  batch_size      photos per step
+  fp16_lora       the "cast fix": the LoRA weights in the UNet are fp16, so autocast doesn't re-cast them on
+                  every use; fp32 master copies live in the optimizer, and grads / weights are copied
+                  between the two with one foreach op each per step (classic mixed precision with masters)
+  compile         torch.compile the UNet forward
 
 `Trainer.step()` times each phase with CUDA syncs, and `profile_step()` runs torch.profiler over
 steps and groups the GPU time into UNet forward / backward / optimizer and by op type
@@ -45,6 +50,9 @@ class Config:
     cache_text: bool = True
     optimizer: str = "adamw_fused"
     grad_ckpt: bool = True
+    batch_size: int = 1
+    fp16_lora: bool = False
+    compile: bool = False
     seed: int = 0
 
 
@@ -92,7 +100,19 @@ class Trainer:
             self.latent_mean, self.latent_std = torch.cat(means), torch.cat(stds)
         self.text = self.encode_text() if cfg.cache_text else None
 
-        self.opt, self.optimizer_name = make_optimizer(self.params, cfg)
+        if cfg.fp16_lora:
+            # fp32 masters for the optimizer; the UNet's LoRA weights become fp16 working copies
+            self.masters = [p.detach().clone().float() for p in self.params]
+            for m in self.masters:
+                m.grad = torch.zeros_like(m)
+            with torch.no_grad():
+                for p in self.params:
+                    p.data = p.data.half()
+            self.opt, self.optimizer_name = make_optimizer(self.masters, cfg)
+        else:
+            self.masters = None
+            self.opt, self.optimizer_name = make_optimizer(self.params, cfg)
+        self.unet_fwd = torch.compile(self.unet) if cfg.compile else self.unet
         self.scaler = torch.amp.GradScaler("cuda")
         self.n_params = sum(p.numel() for p in self.params)
 
@@ -126,31 +146,44 @@ class Trainer:
                 t[name] = time.perf_counter()
 
         mark("start")
-        idx = torch.randint(0, len(self.pixels), (1,), device=self.dev)
+        B = self.cfg.batch_size
+        idx = torch.randint(0, len(self.pixels), (B,), device=self.dev)
         with record_function("vae_encode"):
             latents = self.sample_latents(idx)
         mark("vae")
         with record_function("text_encode"):
             prompt_embeds, pooled = self.text if self.text is not None else self.encode_text()
+            if B > 1:
+                prompt_embeds, pooled = prompt_embeds.expand(B, -1, -1), pooled.expand(B, -1)
         mark("text")
 
         noise = torch.randn_like(latents)
-        timesteps = torch.randint(0, self.scheduler.config.num_train_timesteps, (1,), device=self.dev)
+        timesteps = torch.randint(0, self.scheduler.config.num_train_timesteps, (B,), device=self.dev)
         noisy = self.scheduler.add_noise(latents, noise, timesteps)
         with record_function("unet_forward"), torch.autocast("cuda", dtype=torch.float16):
-            pred = self.unet(noisy, timesteps, prompt_embeds,
-                             added_cond_kwargs={"text_embeds": pooled, "time_ids": self.add_time_ids}).sample
+            pred = self.unet_fwd(noisy, timesteps, prompt_embeds,
+                                 added_cond_kwargs={"text_embeds": pooled, "time_ids": self.add_time_ids.expand(B, -1)}).sample
             loss = F.mse_loss(pred.float(), noise.float())
         mark("forward")
         with record_function("backward"):
             self.scaler.scale(loss).backward()
         mark("backward")
         with record_function("optimizer"):
+            if self.masters is not None:
+                # fp16 grads -> fp32 master grads, step on the masters, masters -> fp16 working weights
+                torch._foreach_copy_([m.grad for m in self.masters], [p.grad for p in self.params])
+                for p in self.params:
+                    p.grad = None
+            opt_params = self.masters if self.masters is not None else self.params
             self.scaler.unscale_(self.opt)
-            torch.nn.utils.clip_grad_norm_(self.params, self.cfg.max_grad_norm)
+            torch.nn.utils.clip_grad_norm_(opt_params, self.cfg.max_grad_norm)
             self.scaler.step(self.opt)
             self.scaler.update()
-            self.opt.zero_grad(set_to_none=True)
+            if self.masters is not None:
+                with torch.no_grad():
+                    torch._foreach_copy_([p.data for p in self.params], self.masters)
+            else:
+                self.opt.zero_grad(set_to_none=True)
         mark("optimizer")
 
         if timed:
@@ -159,11 +192,12 @@ class Trainer:
             ms["total"] = (t["optimizer"] - t["start"]) * 1000
         return loss.item() if timed else None, ms
 
-    def save(self, out_dir):
+    def save(self, out_dir, weight_name="pytorch_lora_weights.safetensors"):
+        """Save in diffusers' LoRA format (loadable with pipe.load_lora_weights)."""
         os.makedirs(out_dir, exist_ok=True)
         layers = convert_state_dict_to_diffusers(get_peft_model_state_dict(self.unet, adapter_name="pet"))
-        StableDiffusionXLPipeline.save_lora_weights(out_dir, unet_lora_layers=layers)
-        return os.path.join(out_dir, "pytorch_lora_weights.safetensors")
+        StableDiffusionXLPipeline.save_lora_weights(out_dir, unet_lora_layers=layers, weight_name=weight_name)
+        return os.path.join(out_dir, weight_name)
 
 
 def load_components(fp32_vae=True):
@@ -215,6 +249,8 @@ CATEGORIES = [
     ("matmul", ("aten::mm", "aten::addmm", "aten::bmm", "aten::baddbmm", "aten::linear", "aten::matmul")),
     ("conv", ("convolution", "conv2d", "cudnn_conv")),
     ("optimizer", ("_foreach", "adam", "_fused_adamw", "optimizer_update", "clip_grad", "_amp_")),
+    ("casts", ("aten::copy_", "aten::_to_copy")),
+    ("compiled (triton)", ("triton_",)),
 ]
 
 
@@ -248,7 +284,8 @@ def profile_step(trainer, steps=3, warmup=5, trace_path=None):
     for e in avg:
         # aten ops only: raw CUDA kernel rows (e.g. cuDNN's "_5x_cudnn_...") are children of aten ops,
         # so counting them too would double-count their time
-        if not e.key.startswith("aten::"):
+        # torch.compile's fused kernels show up as top-level "triton_*" rows, not aten ops
+        if not (e.key.startswith("aten::") or e.key.startswith("triton_")):
             continue
         t = self_dev(e) / 1000 / steps
         if t <= 0:
@@ -264,7 +301,7 @@ def train(images, instance_prompt, steps, cfg: Config, out_dir, log_every=25, co
     trainer = Trainer(images, instance_prompt, cfg, components)
     t0, times = time.perf_counter(), {}
     for s in range(1, steps + 1):
-        trainer.step()
+        trainer.step()  # with batch_size > 1, `steps` counts optimizer steps, not images
         if s % log_every == 0 or s == steps:
             torch.cuda.synchronize()
             times[s] = round(time.perf_counter() - t0, 1)
