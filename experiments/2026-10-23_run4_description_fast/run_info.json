@@ -1,0 +1,107 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "size": 1024,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "scenes": [
+  "as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "as an astronaut on the moon, wearing a space helmet, cinematic",
+  "as a chef in a busy kitchen, wearing a chef hat, funny",
+  "sitting on a throne like a king, wearing a crown, oil painting"
+ ],
+ "pet_lora": "boss-step250.safetensors",
+ "pet_lora_scale": 0.9,
+ "methods": {
+  "base25": [
+   null,
+   "euler",
+   25,
+   6.0,
+   null
+  ],
+  "lcm8": [
+   "lcm",
+   "lcm",
+   8,
+   1.0,
+   null
+  ],
+  "lightning4": [
+   "lightning4",
+   "trailing",
+   4,
+   0.0,
+   null
+  ],
+  "hyper8": [
+   "hyper8",
+   "ddim_trailing",
+   8,
+   0.0,
+   null
+  ],
+  "dmd2_4": [
+   "dmd2",
+   "lcm",
+   4,
+   0.0,
+   [
+    999,
+    749,
+    499,
+    249
+   ]
+  ]
+ },
+ "fail_below": 0.4,
+ "description": {
+  "text": "British Shorthair, gray, short, yellow",
+  "raw": "British Shorthair, gray, short, yellow",
+  "source": "Qwen/Qwen2-VL-2B-Instruct",
+  "load_s": 34.2,
+  "generate_s": 12.11
+ },
+ "per_config": {
+  "base25": {
+   "peak_mem_gb": 9.64
+  },
+  "base25+desc": {
+   "peak_mem_gb": 9.64
+  },
+  "lcm8": {
+   "peak_mem_gb": 10.04
+  },
+  "lcm8+desc": {
+   "peak_mem_gb": 10.04
+  },
+  "lightning4": {
+   "peak_mem_gb": 10.04
+  },
+  "lightning4+desc": {
+   "peak_mem_gb": 10.04
+  },
+  "hyper8": {
+   "peak_mem_gb": 10.04
+  },
+  "hyper8+desc": {
+   "peak_mem_gb": 10.04
+  },
+  "dmd2_4": {
+   "peak_mem_gb": 10.04
+  },
+  "dmd2_4+desc": {
+   "peak_mem_gb": 10.04
+  }
+ },
+ "speed_lora_files": {
+  "lcm": "latent-consistency/lcm-lora-sdxl/pytorch_lora_weights.safetensors",
+  "lightning4": "ByteDance/SDXL-Lightning/sdxl_lightning_4step_lora.safetensors",
+  "hyper8": "ByteDance/Hyper-SD/Hyper-SDXL-8steps-lora.safetensors",
+  "dmd2": "tianweiy/DMD2/dmd2_sdxl_4step_lora_fp16.safetensors"
+ },
+ "total_min": 22.2
+}
