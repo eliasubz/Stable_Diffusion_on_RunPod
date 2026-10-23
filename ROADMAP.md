@@ -26,7 +26,10 @@
 - [x] Run 5 (LCM-8 only): DINO margin vs. real British Shorthairs can't separate LoRA + desc from desc-only (+0.049 vs +0.050). Owner's judgment: the LoRA clearly looks more like Boss. **The LoRA stays in production**; DINO measures breed, not the individual
 - [ ] Individual identity metric (animal re-ID embedding), validated with the real-photo margin test
 - [x] Run 6: profiled training; own loop `train_fast.py` is 2.34× faster per step (cached VAE latents −37%, no grad checkpointing −32%, fused AdamW; 8-bit Adam is slower for LoRA). 250-step LoRA in ~4.0 min vs ~8.8 min on a T4, same quality
-- [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess), then the next levers: fp16 LoRA / no casts, channels_last, torch.compile, batching
+- [x] Run 7: cast fix (no gain), torch.compile (−2%, 5 min compile), time to plateau 220 s → 56 s with 512px / batch 4 / lr 4e-4 (~1.7 min to a usable LoRA on a T4 incl. loading). Batching only helps without grad checkpointing
+- [ ] Pick the training config visually (512/bs4/4e-4 at 56 s vs 768/bs1/2e-4 at 147 s; double-cat artifact in the chef scene)
+- [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
+- [ ] Optional deep dives: Triton attention-backward kernel for sm75 (≤ ~8% of a step), W8A8 INT8 matmuls (matmul is 44% of a step)
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod)
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
