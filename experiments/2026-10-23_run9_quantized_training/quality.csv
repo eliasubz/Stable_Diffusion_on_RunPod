@@ -1,0 +1,5 @@
+base,scene,prompt,path,dino,clip_i,clip_t,dino_crop,clip_i_crop,pet_found
+nf4,0,"a cat as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",/kaggle/working/run9/images/nf4_0.png,0.6270120143890381,0.6031109094619751,0.32704657316207886,0.7041303515434265,0.6149471998214722,True
+nf4,1,"a cat as an astronaut on the moon, wearing a space helmet, cinematic",/kaggle/working/run9/images/nf4_1.png,0.5490016937255859,0.606154203414917,0.2774190306663513,0.717881977558136,0.5807747840881348,True
+nf4,2,"a cat as a chef in a busy kitchen, wearing a chef hat, funny",/kaggle/working/run9/images/nf4_2.png,0.44700029492378235,0.64944988489151,0.31089165806770325,0.4774059057235718,0.6282175779342651,True
+nf4,3,"a cat sitting on a throne like a king, wearing a crown, oil painting",/kaggle/working/run9/images/nf4_3.png,0.6733238101005554,0.5811164379119873,0.34045982360839844,0.6513486504554749,0.5937025547027588,True

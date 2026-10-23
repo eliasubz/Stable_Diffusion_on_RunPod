@@ -1,0 +1,267 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "production": {
+  "resolution": 512,
+  "batch_size": 4,
+  "learning_rate": 0.0004
+ },
+ "train_images": 200,
+ "bnb_install": "ok",
+ "gemm": {
+  "512px bs4 hi-res blocks attn 640": {
+   "M": 4096,
+   "K": 640,
+   "N": 640,
+   "fwd_fp16_ms": 0.1919657999997071,
+   "fwd_int8_ms": 0.29575602000022627,
+   "fwd_int8_incl_quant_ms": 0.6584410199997137,
+   "bwd_fp16_ms": 0.18365564000021095,
+   "bwd_int8_incl_quant_ms": 0.659502620000012,
+   "fwd_speedup_raw": 0.65,
+   "fwd_speedup_incl_quant": 0.29,
+   "bwd_speedup_incl_quant": 0.28
+  },
+  "512px bs4 hi-res blocks ff-in 640": {
+   "M": 4096,
+   "K": 640,
+   "N": 5120,
+   "fwd_fp16_ms": 1.37807797999983,
+   "fwd_int8_ms": 2.292784900000129,
+   "fwd_int8_incl_quant_ms": 2.2437839600002008,
+   "bwd_fp16_ms": 1.1248582199999646,
+   "bwd_int8_incl_quant_ms": 3.679208199999948,
+   "fwd_speedup_raw": 0.6,
+   "fwd_speedup_incl_quant": 0.61,
+   "bwd_speedup_incl_quant": 0.31
+  },
+  "512px bs4 hi-res blocks ff-out 640": {
+   "M": 4096,
+   "K": 2560,
+   "N": 640,
+   "fwd_fp16_ms": 0.41149482000037096,
+   "fwd_int8_ms": 0.9174142200004098,
+   "fwd_int8_incl_quant_ms": 1.8840381000001116,
+   "bwd_fp16_ms": 0.4322147800002085,
+   "bwd_int8_incl_quant_ms": 1.2728234000002203,
+   "fwd_speedup_raw": 0.45,
+   "fwd_speedup_incl_quant": 0.22,
+   "bwd_speedup_incl_quant": 0.34
+  },
+  "512px bs4 hi-res blocks cross k/v 640": {
+   "M": 4096,
+   "K": 2048,
+   "N": 640,
+   "fwd_fp16_ms": 0.35442185999954745,
+   "fwd_int8_ms": 0.6700559600000133,
+   "fwd_int8_incl_quant_ms": 1.530015459999845,
+   "bwd_fp16_ms": 0.3865600199998198,
+   "bwd_int8_incl_quant_ms": 0.9915128000000095,
+   "fwd_speedup_raw": 0.53,
+   "fwd_speedup_incl_quant": 0.23,
+   "bwd_speedup_incl_quant": 0.39
+  },
+  "512px bs4 lo-res blocks attn 1280": {
+   "M": 1024,
+   "K": 1280,
+   "N": 1280,
+   "fwd_fp16_ms": 0.11585294000042268,
+   "fwd_int8_ms": 0.18833416000006764,
+   "fwd_int8_incl_quant_ms": 0.32626859999993485,
+   "bwd_fp16_ms": 0.1159499200002756,
+   "bwd_int8_incl_quant_ms": 0.3201740200000813,
+   "fwd_speedup_raw": 0.62,
+   "fwd_speedup_incl_quant": 0.36,
+   "bwd_speedup_incl_quant": 0.36
+  },
+  "512px bs4 lo-res blocks ff-in 1280": {
+   "M": 1024,
+   "K": 1280,
+   "N": 10240,
+   "fwd_fp16_ms": 0.9862125600000127,
+   "fwd_int8_ms": 1.960742759999903,
+   "fwd_int8_incl_quant_ms": 1.974920740000243,
+   "bwd_fp16_ms": 1.0349537799999098,
+   "bwd_int8_incl_quant_ms": 2.6751525999998194,
+   "fwd_speedup_raw": 0.5,
+   "fwd_speedup_incl_quant": 0.5,
+   "bwd_speedup_incl_quant": 0.39
+  },
+  "512px bs4 lo-res blocks ff-out 1280": {
+   "M": 1024,
+   "K": 5120,
+   "N": 1280,
+   "fwd_fp16_ms": 0.4126050600001463,
+   "fwd_int8_ms": 0.8370796399998426,
+   "fwd_int8_incl_quant_ms": 1.3126850800000511,
+   "bwd_fp16_ms": 0.47251058000028934,
+   "bwd_int8_incl_quant_ms": 1.1152286599997296,
+   "fwd_speedup_raw": 0.49,
+   "fwd_speedup_incl_quant": 0.31,
+   "bwd_speedup_incl_quant": 0.42
+  },
+  "768px bs1 hi-res blocks attn 640": {
+   "M": 2304,
+   "K": 640,
+   "N": 640,
+   "fwd_fp16_ms": 0.11144516000001659,
+   "fwd_int8_ms": 0.17237591999958113,
+   "fwd_int8_incl_quant_ms": 0.33135077999986606,
+   "bwd_fp16_ms": 0.1127769800001488,
+   "bwd_int8_incl_quant_ms": 0.2991030599997657,
+   "fwd_speedup_raw": 0.65,
+   "fwd_speedup_incl_quant": 0.34,
+   "bwd_speedup_incl_quant": 0.38
+  },
+  "768px bs1 hi-res blocks ff-in 640": {
+   "M": 2304,
+   "K": 640,
+   "N": 5120,
+   "fwd_fp16_ms": 0.5316932199997382,
+   "fwd_int8_ms": 1.1354055200001767,
+   "fwd_int8_incl_quant_ms": 1.2552476799999113,
+   "bwd_fp16_ms": 0.6449123200002305,
+   "bwd_int8_incl_quant_ms": 2.3407643799998823,
+   "fwd_speedup_raw": 0.47,
+   "fwd_speedup_incl_quant": 0.42,
+   "bwd_speedup_incl_quant": 0.28
+  },
+  "768px bs1 hi-res blocks ff-out 640": {
+   "M": 2304,
+   "K": 2560,
+   "N": 640,
+   "fwd_fp16_ms": 0.2776597399997627,
+   "fwd_int8_ms": 0.5119999000004327,
+   "fwd_int8_incl_quant_ms": 1.1476030599999376,
+   "bwd_fp16_ms": 0.2472270999999182,
+   "bwd_int8_incl_quant_ms": 0.6526704599997402,
+   "fwd_speedup_raw": 0.54,
+   "fwd_speedup_incl_quant": 0.24,
+   "bwd_speedup_incl_quant": 0.38
+  },
+  "768px bs1 hi-res blocks cross k/v 640": {
+   "M": 2304,
+   "K": 2048,
+   "N": 640,
+   "fwd_fp16_ms": 0.2660014399998545,
+   "fwd_int8_ms": 0.4357905799997752,
+   "fwd_int8_incl_quant_ms": 0.9147279600000502,
+   "bwd_fp16_ms": 0.20175529999960418,
+   "bwd_int8_incl_quant_ms": 0.5185713200000919,
+   "fwd_speedup_raw": 0.61,
+   "fwd_speedup_incl_quant": 0.29,
+   "bwd_speedup_incl_quant": 0.39
+  },
+  "768px bs1 lo-res blocks attn 1280": {
+   "M": 576,
+   "K": 1280,
+   "N": 1280,
+   "fwd_fp16_ms": 0.09884292000037931,
+   "fwd_int8_ms": 0.1758566600000222,
+   "fwd_int8_incl_quant_ms": 0.24240139999960775,
+   "bwd_fp16_ms": 0.09513643999980559,
+   "bwd_int8_incl_quant_ms": 0.2310792000002948,
+   "fwd_speedup_raw": 0.56,
+   "fwd_speedup_incl_quant": 0.41,
+   "bwd_speedup_incl_quant": 0.41
+  },
+  "768px bs1 lo-res blocks ff-in 1280": {
+   "M": 576,
+   "K": 1280,
+   "N": 10240,
+   "fwd_fp16_ms": 0.5571375599998873,
+   "fwd_int8_ms": 1.2381411000001208,
+   "fwd_int8_incl_quant_ms": 1.1980570599996554,
+   "bwd_fp16_ms": 0.7396659599999111,
+   "bwd_int8_incl_quant_ms": 1.9956666799998855,
+   "fwd_speedup_raw": 0.45,
+   "fwd_speedup_incl_quant": 0.47,
+   "bwd_speedup_incl_quant": 0.37
+  },
+  "768px bs1 lo-res blocks ff-out 1280": {
+   "M": 576,
+   "K": 5120,
+   "N": 1280,
+   "fwd_fp16_ms": 0.2524908600003073,
+   "fwd_int8_ms": 0.7023731600003202,
+   "fwd_int8_incl_quant_ms": 0.9381541999999854,
+   "bwd_fp16_ms": 0.26495708000027207,
+   "bwd_int8_incl_quant_ms": 0.5564827000000605,
+   "fwd_speedup_raw": 0.36,
+   "fwd_speedup_incl_quant": 0.27,
+   "bwd_speedup_incl_quant": 0.48
+  }
+ },
+ "qlora_bench": {
+  "fp16 512_bs4": {
+   "error": "out of memory"
+  },
+  "fp16 768_bs1": {
+   "vae": 0.31181279999827893,
+   "text": 0.04294429999163185,
+   "forward": 302.9925123000112,
+   "backward": 393.8656401000003,
+   "optimizer": 19.599444900001117,
+   "total": 716.8123544000025,
+   "peak_mem_gb": 11.907404288,
+   "ms_per_image": 716.8123544000025
+  },
+  "fp16 768_bs2": {
+   "error": "out of memory"
+  },
+  "int8 512_bs4": {
+   "error": "out of memory"
+  },
+  "int8 768_bs1": {
+   "vae": 0.3285006000055546,
+   "text": 0.04345480001575197,
+   "forward": 1028.8467829999831,
+   "backward": 1050.845154500007,
+   "optimizer": 22.406233799995334,
+   "total": 2102.470126700007,
+   "peak_mem_gb": 12.647919616,
+   "ms_per_image": 2102.470126700007
+  },
+  "int8 768_bs2": {
+   "error": "out of memory"
+  },
+  "nf4 512_bs4": {
+   "vae": 0.32360040000298795,
+   "text": 0.058513099997981044,
+   "forward": 753.2930107000027,
+   "backward": 813.3795362000001,
+   "optimizer": 22.72683479999955,
+   "total": 1589.7814952000033,
+   "peak_mem_gb": 14.72594432,
+   "ms_per_image": 397.4453738000008
+  },
+  "nf4 768_bs1": {
+   "vae": 0.30739539998876353,
+   "text": 0.039843099995096054,
+   "forward": 478.67921310000276,
+   "backward": 541.2986724000007,
+   "optimizer": 21.221432899994852,
+   "total": 1041.546556899982,
+   "peak_mem_gb": 10.05305344,
+   "ms_per_image": 1041.546556899982
+  },
+  "nf4 768_bs2": {
+   "error": "out of memory"
+  }
+ },
+ "qlora_train": {
+  "fp16": {
+   "error": "dden_states)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py\", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py\", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/nn/modules/conv.py\", line 553, in forward\n    return self._conv_forward(input, self.weight, self.bias)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/nn/modules/conv.py\", line 548, in _conv_forward\n    return F.conv2d(\n           ~~~~~~~~^\n        input, weight, bias, self.stride, self.padding, self.dilation, self.groups\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 18.81 MiB is free. Including non-PyTorch memory, this process has 14.54 GiB memory in use. Of the allocated memory 14.18 GiB is allocated by PyTorch, and 212.54 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n"
+  },
+  "int8": {
+   "error": "h.ops.bitsandbytes.int8_mm_dequant.default(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        out_i32,\n        ^^^^^^^^\n    ...<3 lines>...\n        bias=bias,\n        ^^^^^^^^^^\n    )\n    ^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_ops.py\", line 865, in __call__\n    return self._op(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_compile.py\", line 54, in inner\n    return disable_fn(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_dynamo/eval_frame.py\", line 1263, in _fn\n    return fn(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/library.py\", line 751, in func_no_dynamo\n    return func(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/bitsandbytes/backends/cuda/ops.py\", line 188, in _\n    out = torch.empty_like(A, dtype=torch.float16)\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 4.81 MiB is free. Including non-PyTorch memory, this process has 14.55 GiB memory in use. Of the allocated memory 14.39 GiB is allocated by PyTorch, and 7.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n"
+  },
+  "nf4": {
+   "steps": 50,
+   "train_s": 77.3,
+   "dino_crop": 0.6377,
+   "clip_t": 0.314
+  }
+ },
+ "total_min": 7.9
+}
