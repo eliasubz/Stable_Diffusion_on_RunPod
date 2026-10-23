@@ -1,5 +1,7 @@
 # Run 9: quantization for training on a T4 (2026-10-23)
 
+> **Correction (run 10):** part B's "INT8 is slower" was a benchmark artifact. B was passed row-major, so cuBLAS fell back to a Volta INT8 kernel without tensor cores. With the TN layout (`x @ Wᵀ`, the `nn.Linear` layout), the Turing IMMA kernel runs at ~2× fp16 on large GEMMs and 1.5–1.9× on SDXL's feed-forward shapes. See `../2026-10-23_run10_int8_gemm_paths/`. Part A (QLoRA) is unaffected.
+
 Script: `worker/run9.py`, run as a private Kaggle kernel on a Tesla T4 (8 min).
 
 ## B. INT8 GEMM feasibility (go/no-go for INT8 training)

@@ -29,8 +29,9 @@
 - [x] Run 7: cast fix (no gain), torch.compile (−2%, 5 min compile), time to plateau 220 s → 56 s with 512px / batch 4 / lr 4e-4 (~1.7 min to a usable LoRA on a T4 incl. loading). Batching only helps without grad checkpointing
 - [x] **Production training config: 512px, batch 4, LR 4e-4, 200 images** (fastest, ~56 s on a T4)
 - [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
-- [x] Run 9: INT8 GEMMs on the T4 are 0.36–0.65× of fp16 (PyTorch `_int_mm` on sm75), so **INT8 training on a T4 is a no-go** with current tooling. QLoRA: nf4 +45% slower, −1.8 GB only; bnb int8 2.9× slower. nf4-trained LoRA transfers to the fp16 base
-- [ ] Research direction INT8/fp8 training for per-user LoRA: revisit on Ampere+ (L4 / 4090 / A100 on RunPod), with the same GEMM go/no-go benchmark first
+- [x] Run 9: QLoRA: nf4 +45% slower, −1.8 GB only; bnb int8 2.9× slower; an nf4-trained LoRA transfers to the fp16 base. (Its INT8 GEMM result was a layout artifact, corrected by run 10)
+- [x] Run 10: **INT8 GEMM is ~2× fp16 on the T4 with the TN layout** (CUTLASS Turing IMMA kernel; 1.5–1.9× on SDXL FF shapes, ~1× on 640×640 attention projections). fp16 NN (pre-transposed weights) is also 1.4–2.2× faster than TN on FF shapes. Triton has no tensor-core path on sm75
+- [ ] **Research direction (alive): INT8 frozen-base LoRA training on the T4.** INT8 TN GEMMs for the FF layers (forward + input gradient), per-token activation quantization fused by torch.compile, attention in fp16; compare end to end vs fp16 TN and fp16 with pre-transposed weights; then the same on Ampere+ / fp8
 - [ ] Optional: Triton attention-backward kernel for sm75 (≤ ~8% of a step)
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
