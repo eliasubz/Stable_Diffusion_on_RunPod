@@ -1,0 +1,383 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "resolution": 768,
+ "rank": 8,
+ "train_photos": 6,
+ "bitsandbytes_install": "ok",
+ "bench": {
+  "no_cache": {
+   "vae": 577.8445288499995,
+   "text": 24.083534949997443,
+   "forward": 389.5920851999989,
+   "backward": 683.5302361000004,
+   "optimizer": 27.91947790000222,
+   "total": 1702.9698629999984,
+   "peak_mem_gb": 8.93498624,
+   "optimizer_used": "adamw",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": false,
+   "cfg_cache_text": false,
+   "cfg_optimizer": "adamw",
+   "cfg_grad_ckpt": true
+  },
+  "script_equiv": {
+   "vae": 669.9788688499837,
+   "text": 0.1428928499990434,
+   "forward": 425.7055901000114,
+   "backward": 713.4075158999963,
+   "optimizer": 29.52882825000529,
+   "total": 1838.7636959499955,
+   "peak_mem_gb": 8.923491328,
+   "optimizer_used": "adamw",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": false,
+   "cfg_cache_text": true,
+   "cfg_optimizer": "adamw",
+   "cfg_grad_ckpt": true
+  },
+  "+cached_latents": {
+   "vae": 0.32421205000900954,
+   "text": 0.04043019998789532,
+   "forward": 422.1211923999931,
+   "backward": 704.5629015499969,
+   "optimizer": 28.774694300005876,
+   "total": 1155.8234304999928,
+   "peak_mem_gb": 7.826924032,
+   "optimizer_used": "adamw",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": true,
+   "cfg_cache_text": true,
+   "cfg_optimizer": "adamw",
+   "cfg_grad_ckpt": true
+  },
+  "+fused_adamw": {
+   "vae": 0.30624034999959804,
+   "text": 0.04081490000089616,
+   "forward": 423.97329574999384,
+   "backward": 705.0145197500115,
+   "optimizer": 19.090124199993852,
+   "total": 1148.4249949499997,
+   "peak_mem_gb": 7.827497472,
+   "optimizer_used": "adamw_fused",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": true,
+   "cfg_cache_text": true,
+   "cfg_optimizer": "adamw_fused",
+   "cfg_grad_ckpt": true
+  },
+  "+8bit_adam": {
+   "vae": 0.3012640999941141,
+   "text": 0.0439752500085433,
+   "forward": 425.76200169999083,
+   "backward": 710.3507173500191,
+   "optimizer": 99.48530209999262,
+   "total": 1235.9432605000052,
+   "peak_mem_gb": 7.7584,
+   "optimizer_used": "adamw8bit",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": true,
+   "cfg_cache_text": true,
+   "cfg_optimizer": "adamw8bit",
+   "cfg_grad_ckpt": true
+  },
+  "+no_grad_ckpt": {
+   "vae": 0.3143533499780915,
+   "text": 0.04142005000744575,
+   "forward": 338.4933049499864,
+   "backward": 425.20523064999344,
+   "optimizer": 21.30730005001169,
+   "total": 785.361609049977,
+   "peak_mem_gb": 11.899112448,
+   "optimizer_used": "adamw_fused",
+   "trainable_params": 11612160,
+   "cfg_cache_latents": true,
+   "cfg_cache_text": true,
+   "cfg_optimizer": "adamw_fused",
+   "cfg_grad_ckpt": false
+  }
+ },
+ "profiles": {
+  "script_equiv": {
+   "phases_ms": {
+    "vae_encode": 665.4080413333332,
+    "text_encode": 0.0,
+    "unet_forward": 609.8278509999999,
+    "backward": 0.005546666666632519,
+    "optimizer": 40.80047433333363
+   },
+   "categories_ms": {
+    "elementwise/other": 784.3890016666636,
+    "conv": 589.963082666665,
+    "matmul": 330.5202286666335,
+    "attention": 221.00751099999803,
+    "groupnorm": 56.143098333337036,
+    "layernorm": 22.46726033333165,
+    "optimizer": 5.522132333329568
+   },
+   "top_ops_ms": [
+    [
+     "aten::cudnn_convolution",
+     543.86
+    ],
+    [
+     "_5x_cudnn_volta_scudnn_winograd_128x128_ldg1_ldg4_relu_tile148t_nt_v1",
+     410.23
+    ],
+    [
+     "aten::mm",
+     200.74
+    ],
+    [
+     "aten::_efficient_attention_forward",
+     132.58
+    ],
+    [
+     "aten::addmm",
+     125.13
+    ],
+    [
+     "aten::copy_",
+     98.38
+    ],
+    [
+     "aten::_efficient_attention_backward",
+     88.42
+    ],
+    [
+     "aten::native_group_norm",
+     49.6
+    ],
+    [
+     "aten::add_",
+     49.12
+    ],
+    [
+     "aten::convolution_backward",
+     46.1
+    ],
+    [
+     "aten::mul",
+     38.58
+    ],
+    [
+     "_5x_cudnn_volta_scudnn_128x64_relu_xregs_large_nn_v1",
+     38.08
+    ],
+    [
+     "aten::add",
+     35.39
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_relu_f2f_exp_medium_nhwc_tn_v1",
+     23.58
+    ],
+    [
+     "aten::silu",
+     22.57
+    ],
+    [
+     "aten::div",
+     12.86
+    ],
+    [
+     "aten::native_layer_norm",
+     12.46
+    ],
+    [
+     "aten::gelu",
+     11.83
+    ],
+    [
+     "aten::native_layer_norm_backward",
+     10.01
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x64_sliced1x2_ldg8_relu_f2f_exp_small_nhwc_tn_v1",
+     9.83
+    ],
+    [
+     "aten::cat",
+     8.57
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_dgrad_relu_f2f_exp_medium_nhwc_tt_v1",
+     8.24
+    ],
+    [
+     "aten::gelu_backward",
+     7.17
+    ],
+    [
+     "aten::native_group_norm_backward",
+     6.54
+    ],
+    [
+     "aten::bmm",
+     4.66
+    ]
+   ]
+  },
+  "+no_grad_ckpt": {
+   "phases_ms": {
+    "vae_encode": 0.12105000000000776,
+    "text_encode": 0.0,
+    "unet_forward": 429.69681099999985,
+    "backward": 0.006103333333332558,
+    "optimizer": 19.117935000000056
+   },
+   "categories_ms": {
+    "matmul": 253.95164900000208,
+    "elementwise/other": 192.02860266666585,
+    "attention": 123.33602100000044,
+    "conv": 104.44827500000082,
+    "layernorm": 16.265778666668314,
+    "groupnorm": 12.983840666667502,
+    "optimizer": 2.895288333332981
+   },
+   "top_ops_ms": [
+    [
+     "aten::mm",
+     183.82
+    ],
+    [
+     "aten::_efficient_attention_backward",
+     100.44
+    ],
+    [
+     "aten::addmm",
+     70.13
+    ],
+    [
+     "aten::copy_",
+     66.27
+    ],
+    [
+     "aten::convolution_backward",
+     53.5
+    ],
+    [
+     "aten::cudnn_convolution",
+     50.95
+    ],
+    [
+     "aten::mul",
+     29.13
+    ],
+    [
+     "aten::add_",
+     23.14
+    ],
+    [
+     "aten::_efficient_attention_forward",
+     22.9
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_relu_f2f_exp_medium_nhwc_tn_v1",
+     13.78
+    ],
+    [
+     "aten::add",
+     11.78
+    ],
+    [
+     "aten::native_layer_norm_backward",
+     10.17
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_dgrad_relu_f2f_exp_medium_nhwc_tt_v1",
+     9.7
+    ],
+    [
+     "aten::cat",
+     8.52
+    ],
+    [
+     "aten::gelu_backward",
+     7.72
+    ],
+    [
+     "aten::native_group_norm_backward",
+     6.85
+    ],
+    [
+     "aten::native_group_norm",
+     6.13
+    ],
+    [
+     "aten::native_layer_norm",
+     6.1
+    ],
+    [
+     "aten::gelu",
+     5.8
+    ],
+    [
+     "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x64_sliced1x2_ldg8_relu_f2f_exp_small_nhwc_tn_v1",
+     5.27
+    ],
+    [
+     "aten::silu_backward",
+     2.99
+    ],
+    [
+     "aten::div",
+     2.5
+    ],
+    [
+     "aten::silu",
+     2.48
+    ],
+    [
+     "aten::fill_",
+     2.13
+    ],
+    [
+     "aten::_fused_adamw_",
+     1.63
+    ]
+   ]
+  }
+ },
+ "load_components_s": 48.3,
+ "fastest": "+no_grad_ckpt",
+ "speedup_vs_script": 2.34,
+ "full_train": {
+  "config": "+no_grad_ckpt",
+  "steps": 250,
+  "total_s": 198.5,
+  "step_times_s": {
+   "25": 21.0,
+   "50": 40.4,
+   "75": 59.1,
+   "100": 77.9,
+   "125": 97.2,
+   "150": 116.7,
+   "175": 135.9,
+   "200": 154.9,
+   "225": 174.0,
+   "250": 193.2
+  },
+  "s_per_step": 0.773,
+  "note": "excludes model loading (load_components_s); run 2's script took 86 s + 1.76 s/step"
+ },
+ "quality": {
+  "('dino_crop', 'mean')": {
+   "fast_lora": 0.7805,
+   "script_lora": 0.7855
+  },
+  "('dino_crop', 'std')": {
+   "fast_lora": 0.0257,
+   "script_lora": 0.0259
+  },
+  "('clip_t', 'mean')": {
+   "fast_lora": 0.3041,
+   "script_lora": 0.3022
+  },
+  "('clip_t', 'std')": {
+   "fast_lora": 0.027,
+   "script_lora": 0.0272
+  }
+ },
+ "total_min": 15.2
+}

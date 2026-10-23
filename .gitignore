@@ -4,3 +4,4 @@ worker/train_dreambooth_lora_sdxl.py
 __pycache__/
 *.safetensors
 experiments/*/images/
+experiments/*/traces/
