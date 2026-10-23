@@ -1,0 +1,102 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "size": 1024,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "scenes": [
+  "as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
+  "as an astronaut on the moon, wearing a space helmet, cinematic",
+  "as a chef in a busy kitchen, wearing a chef hat, funny",
+  "sitting on a throne like a king, wearing a crown, oil painting"
+ ],
+ "pet_lora": "boss-step250.safetensors",
+ "pet_lora_scale": 0.9,
+ "configs": {
+  "lora": [
+   true,
+   null
+  ],
+  "lora+desc_v1": [
+   true,
+   "v1"
+  ],
+  "lora+desc_v2": [
+   true,
+   "v2"
+  ],
+  "nolora+desc_v1": [
+   false,
+   "v1"
+  ],
+  "nolora+desc_v2": [
+   false,
+   "v2"
+  ]
+ },
+ "fail_below": 0.4,
+ "description_v2": {
+  "text": "gray fur, yellow eyes, black nose, short tail, round ears, fluffy paws",
+  "raw": "gray fur, yellow eyes, black nose, short tail, round ears, fluffy paws",
+  "source": "Qwen/Qwen2-VL-2B-Instruct",
+  "load_s": 32.1,
+  "generate_s": 12.41
+ },
+ "description_v1": "British Shorthair, gray, short, yellow",
+ "speed_lora_files": {
+  "lcm": "latent-consistency/lcm-lora-sdxl/pytorch_lora_weights.safetensors"
+ },
+ "per_config": {
+  "lora": {
+   "peak_mem_gb": 10.04
+  },
+  "lora+desc_v1": {
+   "peak_mem_gb": 10.04
+  },
+  "lora+desc_v2": {
+   "peak_mem_gb": 10.04
+  },
+  "nolora+desc_v1": {
+   "peak_mem_gb": 10.01
+  },
+  "nolora+desc_v2": {
+   "peak_mem_gb": 10.01
+  }
+ },
+ "breed": {
+  "dataset": "timm/oxford-iiit-pet",
+  "available": 100,
+  "refs": 20,
+  "probes": 10
+ },
+ "metric_validation": {
+  "('boss', 'mean')": {
+   "boss_train_photos": 0.781,
+   "other_bsh_photos": 0.65
+  },
+  "('boss', 'std')": {
+   "boss_train_photos": 0.038,
+   "other_bsh_photos": 0.199
+  },
+  "('breed', 'mean')": {
+   "boss_train_photos": 0.728,
+   "other_bsh_photos": 0.658
+  },
+  "('breed', 'std')": {
+   "boss_train_photos": 0.039,
+   "other_bsh_photos": 0.192
+  },
+  "('margin', 'mean')": {
+   "boss_train_photos": 0.053,
+   "other_bsh_photos": -0.008
+  },
+  "('margin', 'std')": {
+   "boss_train_photos": 0.013,
+   "other_bsh_photos": 0.034
+  }
+ },
+ "total_min": 9.6
+}
