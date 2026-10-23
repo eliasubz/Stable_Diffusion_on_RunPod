@@ -1,13 +1,19 @@
-"""RunPod serverless worker: SDXL + IP-Adapter (zero-shot pet identity conditioning).
+"""RunPod generation worker (production): SDXL + LCM-LoRA (8 steps) + per-pet LoRA.
+
+Production config from runs 3-8: the LCM-LoRA is fused into the base weights once at startup,
+generation is 8 steps without CFG at 1024px, and every pet LoRA stays resident in its own slot
+(multi_lora.py, run 8: +33% throughput vs. swapping, ~26 MB per pet). Slots are reused
+least-recently-used. The server builds the prompt, including the pet token and its description
+("a sks cat, British Shorthair, gray, ..., as a pirate").
 
 Input:
-  prompt (str, required), pet_image (base64 or http(s) URL, optional),
-  lora (URL or local path to a DreamBooth-LoRA .safetensors, optional), lora_scale (0-1),
-  negative_prompt, ip_adapter_scale (0-1), steps, guidance_scale, width, height, seed
+  prompt (str, required), lora (URL or local path to the pet's LoRA, optional),
+  lora_scale (default 0.9), seed, width, height (default 1024), steps (default 8)
 Output:
-  image_base64 (PNG), seed, timings_ms {cold_load, fetch_input, lora_load, inference, encode}
+  image_base64 (PNG), seed, timings_ms {cold_load, lora_load, inference, encode}
 """
 import base64
+import collections
 import hashlib
 import io
 import os
@@ -16,41 +22,34 @@ import time
 import requests
 import runpod
 import torch
-from diffusers import AutoencoderKL, StableDiffusionXLPipeline
-from PIL import Image
+from diffusers import AutoencoderKL, LCMScheduler, StableDiffusionXLPipeline
+from huggingface_hub import hf_hub_download
 
-from common import load_image
+import multi_lora as ml
 
 MODEL_ID = os.environ.get("MODEL_ID", "stabilityai/stable-diffusion-xl-base-1.0")
-IP_ADAPTER_REPO = os.environ.get("IP_ADAPTER_REPO", "h94/IP-Adapter")
-IP_ADAPTER_WEIGHT = os.environ.get("IP_ADAPTER_WEIGHT", "ip-adapter_sdxl.bin")
-# fp16-safe VAE: the stock SDXL VAE upcasts to fp32 for decode, which OOMs a 16GB T4 at 1024px.
-VAE_ID = os.environ.get("VAE_ID", "madebyollin/sdxl-vae-fp16-fix")
-# LOW_VRAM=1 for <=16GB GPUs (Colab T4): decode in tiles to cap VAE memory.
-LOW_VRAM = os.environ.get("LOW_VRAM") == "1"
-# CPU_OFFLOAD=1 parks idle submodules in system RAM. Last resort: needs ~16GB+ RAM and is much slower.
-CPU_OFFLOAD = os.environ.get("CPU_OFFLOAD") == "1"
+VAE_ID = os.environ.get("VAE_ID", "madebyollin/sdxl-vae-fp16-fix")  # the stock VAE NaNs in fp16
+LCM_LORA = ("latent-consistency/lcm-lora-sdxl", "pytorch_lora_weights.safetensors")
+LORA_RANK = int(os.environ.get("LORA_RANK", 8))
+LORA_SLOTS = int(os.environ.get("LORA_SLOTS", 32))  # resident pets per worker
+LORA_CACHE = os.environ.get("LORA_CACHE", "/tmp/loras")
 
 # Loaded once per container so warm requests skip this cost.
 _t0 = time.perf_counter()
 vae = AutoencoderKL.from_pretrained(VAE_ID, torch_dtype=torch.float16)
 pipe = StableDiffusionXLPipeline.from_pretrained(
     MODEL_ID, vae=vae, torch_dtype=torch.float16, variant="fp16", use_safetensors=True
-)
-pipe.load_ip_adapter(IP_ADAPTER_REPO, subfolder="sdxl_models", weight_name=IP_ADAPTER_WEIGHT)
-if CPU_OFFLOAD:
-    pipe.enable_model_cpu_offload()
-else:
-    pipe.to("cuda")
-if LOW_VRAM:
-    pipe.enable_vae_tiling()
-    pipe.enable_vae_slicing()
+).to("cuda")
+pipe.set_progress_bar_config(disable=True)
+pipe.load_lora_weights(hf_hub_download(*LCM_LORA), adapter_name="lcm")
+pipe.fuse_lora(adapter_names=["lcm"])
+pipe.unload_lora_weights()  # keeps the fused LCM weights
+pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
+selector, wrapped = ml.wrap_unet(pipe.unet, rank=LORA_RANK, max_adapters=LORA_SLOTS + 1)  # slot 0 = no LoRA
 COLD_LOAD_MS = (time.perf_counter() - _t0) * 1000
 _first_request = True
 
-
-LORA_CACHE = os.environ.get("LORA_CACHE", "/tmp/loras")
-_loaded_lora = None
+slots = collections.OrderedDict()  # (lora source, scale) -> slot, least recently used first
 
 
 def fetch_lora(src: str) -> str:
@@ -66,17 +65,21 @@ def fetch_lora(src: str) -> str:
     return path
 
 
-def ensure_lora(src, scale: float):
-    """Keep the last-used LoRA loaded so repeat requests for the same pet skip the swap."""
-    global _loaded_lora
-    if src != _loaded_lora:
-        if _loaded_lora:
-            pipe.unload_lora_weights()
-        if src:
-            pipe.load_lora_weights(fetch_lora(src), adapter_name="pet")
-        _loaded_lora = src
-    if src:
-        pipe.set_adapters(["pet"], adapter_weights=[scale])
+def slot_for(src, scale: float) -> int:
+    """Slot holding this pet's LoRA, loading it (and evicting the least recently used pet) if needed."""
+    if not src:
+        return 0
+    key = (src, scale)
+    if key in slots:
+        slots.move_to_end(key)
+        return slots[key]
+    if len(slots) < LORA_SLOTS:
+        slot = len(slots) + 1
+    else:
+        _, slot = slots.popitem(last=False)
+    ml.load_into_slot(wrapped, fetch_lora(src), slot, scale=scale)
+    slots[key] = slot
+    return slot
 
 
 def handler(job):
@@ -90,31 +93,20 @@ def handler(job):
     _first_request = False
 
     t = time.perf_counter()
-    pet = load_image(inp["pet_image"]) if inp.get("pet_image") else None
-    timings["fetch_input"] = (time.perf_counter() - t) * 1000
-
-    t = time.perf_counter()
-    ensure_lora(inp.get("lora"), float(inp.get("lora_scale", 0.9)))
+    slot = slot_for(inp.get("lora"), float(inp.get("lora_scale", 0.9)))
+    selector.idx = torch.tensor([slot], device="cuda")
     timings["lora_load"] = (time.perf_counter() - t) * 1000
 
-    # Scale 0 disables the adapter for text-only requests.
-    pipe.set_ip_adapter_scale(float(inp.get("ip_adapter_scale", 0.6)) if pet else 0.0)
-    ip_image = pet or Image.new("RGB", (224, 224))
-
     seed = int(inp.get("seed", torch.seed() % 2**32))
-    gen = torch.Generator("cuda").manual_seed(seed)
-
     torch.cuda.synchronize()
     t = time.perf_counter()
     image = pipe(
         prompt=prompt,
-        negative_prompt=inp.get("negative_prompt", "blurry, deformed, low quality"),
-        ip_adapter_image=ip_image,
-        num_inference_steps=int(inp.get("steps", 30)),
-        guidance_scale=float(inp.get("guidance_scale", 6.0)),
+        num_inference_steps=int(inp.get("steps", 8)),
+        guidance_scale=1.0,  # LCM: no classifier-free guidance
         width=int(inp.get("width", 1024)),
         height=int(inp.get("height", 1024)),
-        generator=gen,
+        generator=torch.Generator("cuda").manual_seed(seed),
     ).images[0]
     torch.cuda.synchronize()
     timings["inference"] = (time.perf_counter() - t) * 1000

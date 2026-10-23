@@ -1,6 +1,6 @@
 """Run 3: inference speed vs. quality for personalized SDXL (week 3).
 
-Starts from run 2's winner (Boss's 250-step DreamBooth-LoRA) and measures what each speedup costs:
+Starts from run 2's winner (Boss's 300-step DreamBooth-LoRA) and measures what each speedup costs:
 LoRA fusing, fewer steps, step-distillation LoRAs (LCM, SDXL-Lightning) stacked on the pet LoRA,
 and torch.compile. Latency is measured warm (one warm-up image per config is excluded). Identity
 is scored on held-out photos (cropped to the pet), prompt adherence with CLIP-T, as in run 2.
@@ -21,8 +21,8 @@ import traceback
 PET_CLASS = "cat"
 SUBJECT = "sks cat"
 HOLDOUT = {"Boss4.jpeg", "Boss8.jpeg"}
-PET_LORA = "boss-step250.safetensors"  # run 2: identity plateaus at 200-300 steps; 250 picked from the images
-PET_LORA_SCALE = 0.9
+PET_LORA = "boss-step300.safetensors"  # run 2: identity plateaus at 200-300 steps; 300 picked from the images
+PET_LORA_SCALE = 0.8
 SCENES = [
     "as a pirate captain on a ship, wearing a tricorn hat, funny, cinematic",
     "as an astronaut on the moon, wearing a space helmet, cinematic",
@@ -30,7 +30,7 @@ SCENES = [
     "sitting on a throne like a king, wearing a crown, oil painting",
 ]
 SEEDS = [1, 2, 3]
-SIZE = 1024  # production resolution (and what the distillation LoRAs were trained at)
+SIZE = 768  # production resolution (and what the distillation LoRAs were trained at)
 NEGATIVE = "blurry, deformed, low quality"
 
 # name: (speed LoRA or None, scheduler, steps, guidance, fuse, compile)

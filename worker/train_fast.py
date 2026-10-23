@@ -15,6 +15,8 @@ LoRA format. What can be switched on or off:
                   every use; fp32 master copies live in the optimizer, and grads / weights are copied
                   between the two with one foreach op each per step (classic mixed precision with masters)
   compile         torch.compile the UNet forward
+  precision       "auto" (bf16 where supported, e.g. L4 / Ampere+, else fp16 + loss scaling as on a T4),
+                  "bf16" or "fp16"
 
 `Trainer.step()` times each phase with CUDA syncs, and `profile_step()` runs torch.profiler over
 steps and groups the GPU time into UNet forward / backward / optimizer and by op type
@@ -53,6 +55,7 @@ class Config:
     batch_size: int = 1
     fp16_lora: bool = False
     compile: bool = False
+    precision: str = "auto"
     seed: int = 0
 
 
@@ -66,6 +69,13 @@ class Trainer:
         self.c = c
         self.unet, self.vae = c["unet"], c["vae"]
         self.scheduler = c["scheduler"]
+        # Native bf16 needs Ampere+ (sm80; the L4 is sm89). torch.cuda.is_bf16_supported() also returns True
+        # on a T4 via slow emulation (smoke test: 3.2 s/step instead of ~0.6), so check the capability.
+        native_bf16 = torch.cuda.get_device_capability()[0] >= 8
+        bf16 = cfg.precision == "bf16" or (cfg.precision == "auto" and native_bf16)
+        self.amp_dtype = torch.bfloat16 if bf16 else torch.float16
+        if self.unet.dtype != self.amp_dtype:
+            self.unet.to(self.amp_dtype)  # frozen base in the compute dtype; LoRA params are cast to fp32 below
 
         # LoRA exactly like the diffusers script; trainable params in fp32, frozen UNet in fp16
         self.unet.requires_grad_(False)
@@ -86,7 +96,7 @@ class Trainer:
         self.pixels = torch.stack([to_tensor(ImageOps.fit(im, (cfg.resolution,) * 2)) for im in images]).to(self.dev)
         self.instance_prompt = instance_prompt
         r = cfg.resolution
-        self.add_time_ids = torch.tensor([[r, r, 0, 0, r, r]], device=self.dev, dtype=torch.float16)
+        self.add_time_ids = torch.tensor([[r, r, 0, 0, r, r]], device=self.dev, dtype=self.amp_dtype)
 
         self.latent_mean = self.latent_std = None
         if cfg.cache_latents:
@@ -107,13 +117,14 @@ class Trainer:
                 m.grad = torch.zeros_like(m)
             with torch.no_grad():
                 for p in self.params:
-                    p.data = p.data.half()
+                    p.data = p.data.to(self.amp_dtype)
             self.opt, self.optimizer_name = make_optimizer(self.masters, cfg)
         else:
             self.masters = None
             self.opt, self.optimizer_name = make_optimizer(self.params, cfg)
         self.unet_fwd = torch.compile(self.unet) if cfg.compile else self.unet
-        self.scaler = torch.amp.GradScaler("cuda")
+        # Loss scaling only matters for fp16; bf16 has fp32's exponent range
+        self.scaler = torch.amp.GradScaler("cuda", enabled=self.amp_dtype == torch.float16)
         self.n_params = sum(p.numel() for p in self.params)
 
     @torch.no_grad()
@@ -160,7 +171,7 @@ class Trainer:
         noise = torch.randn_like(latents)
         timesteps = torch.randint(0, self.scheduler.config.num_train_timesteps, (B,), device=self.dev)
         noisy = self.scheduler.add_noise(latents, noise, timesteps)
-        with record_function("unet_forward"), torch.autocast("cuda", dtype=torch.float16):
+        with record_function("unet_forward"), torch.autocast("cuda", dtype=self.amp_dtype):
             pred = self.unet_fwd(noisy, timesteps, prompt_embeds,
                                  added_cond_kwargs={"text_embeds": pooled, "time_ids": self.add_time_ids.expand(B, -1)}).sample
             loss = F.mse_loss(pred.float(), noise.float())

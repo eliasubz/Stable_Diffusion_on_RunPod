@@ -84,7 +84,7 @@ info = {"gpu": gpu, "vram_gb": round(vram_gb, 1), "train_cfg": TRAIN_CFG, "train
         "holdout_photos": sorted(HOLDOUT), "ip_photo": IP_PHOTO, "gen": GEN, "seeds": SEEDS, "scenes": SCENES}
 
 # ---- 1. train once, keeping a LoRA every 50 steps --------------------------------------------------
-import train  # noqa: E402
+import train_diffusers as train  # noqa: E402  (the diffusers-script trainer used for runs 1-2)
 
 train_out = train.train({**TRAIN_CFG, "images": [b64(p) for p in train_photos], "class_word": PET_CLASS, "run_id": "boss-run2"})
 if "error" in train_out:

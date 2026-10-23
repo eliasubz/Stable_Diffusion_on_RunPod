@@ -1,25 +1,34 @@
-# RunPod SDXL + IP-Adapter worker
+# PetsAlive GPU workers (RunPod serverless, built for L4)
 
-Serverless worker that the proxy server's BullMQ queue calls to make pet images.
+One image, two endpoints:
 
-## Build & deploy
-```bash
-docker build --platform linux/amd64 -t <dockerhub-user>/petsalive-sdxl:0.1 .
-docker push <dockerhub-user>/petsalive-sdxl:0.1
-```
-On RunPod, go to Serverless → New Endpoint → Custom image, pick a 24GB GPU (A5000/4090/L4), and set min workers to 0 and max to 2.
-Put the endpoint ID and API key in the proxy server's `.env` (`RUNPOD_ENDPOINT_ID`, `RUNPOD_API_KEY`).
+| endpoint | start command | does |
+|---|---|---|
+| **generation** | default (`python -u handler.py`) | SDXL + LCM-LoRA (8 steps, no CFG, 1024px) + per-pet LoRA. All pet LoRAs stay resident in slots (`multi_lora.py`) |
+| **training** | `python -u train.py` | DreamBooth-LoRA with our own loop (`train_fast.py`: 512px, batch 4, lr 4e-4, 200 images; bf16 on the L4), then a Qwen2-VL-2B pet description |
 
-## Local test (needs a CUDA GPU)
-`python handler.py --test_input "$(cat test_input.json)"` (runpod SDK local mode)
+The settings come from the experiments in `../experiments/` (runs 1–10, all on a Kaggle T4). See `../ROADMAP.md`.
 
-## Input / output
-See the docstring in `handler.py`. `timings_ms` comes back with every response. That's the raw data for the latency benchmarks.
+## Deploy on RunPod
+1. **GitHub integration:** Serverless → New Endpoint → GitHub repo `eliasubz/Stable_Diffusion_on_RunPod`, branch `main`, Dockerfile `worker/Dockerfile`, build context `worker`. Weights are baked in at build time, so expect a long first build.
+2. **Generation endpoint:** GPU **L4 (24 GB)**, active/min workers **0**, max 1–2, idle timeout 5 s, execution timeout 300 s, container disk ≥ 40 GB, FlashBoot on.
+3. **Training endpoint:** same image and GPU, container start command `python -u train.py`, execution timeout 900 s, and the R2 env vars below so it returns a `lora_url` the generation endpoint can download.
+4. Put the endpoint IDs and API key into the proxy server's `.env` (`RUNPOD_ENDPOINT_ID`, `RUNPOD_TRAIN_ENDPOINT_ID`, `RUNPOD_API_KEY`).
 
-## Training endpoint (DreamBooth-LoRA)
-Same image, second endpoint: set the start command to `python -u train.py`, and give it a longer execution timeout (~30 min).
-Set `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` and `S3_PUBLIC_URL` (any S3-compatible bucket, e.g. Cloudflare R2) so it returns a `lora_url`.
-Pass that URL as `lora` to the generation endpoint.
+Training env (any S3-compatible bucket, e.g. Cloudflare R2): `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_PUBLIC_URL`.
 
-## Week 2 experiment
-`week2_dreambooth.ipynb` trains a LoRA on one pet, then compares text-only / IP-Adapter / LoRA on DINO, CLIP-I and CLIP-T scores and latency. Run it on Colab.
+## API
+**Training input:** `images` (3–10, base64 or URLs), `class_word` (cat / dog / pet), `token` (default `sks`), `run_id`; optional overrides `resolution`, `batch_size`, `learning_rate`, `rank`, `images_seen`, `seed`.
+**Training output:** `lora_url` (or `lora_path`), `instance_prompt`, `description`, `precision`, `timings_ms` {cold_load, prep, train, describe, upload, total}.
+
+**Generation input:** `prompt` (the server inserts `sks cat, <description>,`), `lora` (URL or path), `lora_scale` (0.9), `seed`, `width`/`height` (1024), `steps` (8).
+**Generation output:** `image_base64`, `seed`, `timings_ms` {cold_load, lora_load, inference, encode}.
+
+## Files
+- `handler.py`, `train.py`: the two RunPod handlers
+- `train_fast.py`: training loop (cached latents, fused AdamW, auto bf16/fp16, profiling helpers)
+- `multi_lora.py`: batched multi-LoRA layers for the UNet
+- `describe.py`: Qwen2-VL-2B pet description
+- `common.py`: image loading, S3 upload, fp16 LoRA conversion
+- `train_diffusers.py`: the old diffusers-script trainer (runs 1–2)
+- `run*.py`, `*.ipynb`, `eval/`: experiments

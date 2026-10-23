@@ -1,0 +1,58 @@
+{
+ "gpu": "Tesla T4",
+ "bf16_supported": true,
+ "train_import_s": 102.7,
+ "overrides": {
+  "batch_size": 2
+ },
+ "train": {
+  "instance_prompt": "a photo of sks cat",
+  "description": "British Shorthair, gray, short, yellow",
+  "description_raw": "British Shorthair, gray, short, yellow",
+  "precision": "bf16",
+  "steps": 100,
+  "config": {
+   "resolution": 512,
+   "batch_size": 2,
+   "learning_rate": 0.0004,
+   "rank": 8
+  },
+  "size_mb": 23.4,
+  "timings_ms": {
+   "cold_load": 73130.00878100001,
+   "prep": 147.42894699998033,
+   "train": 322803.968903,
+   "describe": 7346.249402000012,
+   "upload": 0.013729999977840635,
+   "total": 331022.830528
+  },
+  "lora_path": "/tmp/loras/boss-smoke/pytorch_lora_weights.safetensors"
+ },
+ "train_progress": [
+  "training 90/100",
+  "training 100/100",
+  "describing"
+ ],
+ "handler_import_s": 12.8,
+ "generate": {
+  "lora_pirate": {
+   "cold_load": 12779.673709999997,
+   "lora_load": 83.31348899992008,
+   "inference": 4858.466715999953,
+   "encode": 422.8140560001066
+  },
+  "lora_astronaut": {
+   "cold_load": 0.0,
+   "lora_load": 0.23574400006509677,
+   "inference": 4894.199537999953,
+   "encode": 433.3258860000342
+  },
+  "no_lora_astronaut": {
+   "cold_load": 0.0,
+   "lora_load": 0.22960799992688408,
+   "inference": 4996.852545000024,
+   "encode": 446.33791600006134
+  }
+ },
+ "slots": 1
+}

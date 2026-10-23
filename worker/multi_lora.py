@@ -60,6 +60,9 @@ def wrap_unet(unet, rank: int, max_adapters: int):
 def load_into_slot(wrapped, path_or_sd, slot: int, scale: float = 1.0):
     """Copy one diffusers-format LoRA into adapter slot `slot`. Returns the number of layers loaded."""
     sd = load_file(path_or_sd) if isinstance(path_or_sd, str) else path_or_sd
+    for m in wrapped.values():  # a reused slot must not keep the previous user's weights
+        m.A.data[slot].zero_()
+        m.B.data[slot].zero_()
     n = 0
     for key, w in sd.items():
         if not key.endswith(".lora.down.weight"):
@@ -71,6 +74,8 @@ def load_into_slot(wrapped, path_or_sd, slot: int, scale: float = 1.0):
         up = sd[key.replace(".lora.down.weight", ".lora.up.weight")]
         alpha_key = key.replace(".lora.down.weight", ".alpha")
         r = w.shape[0]
+        if r > m.A.shape[1]:
+            raise ValueError(f"LoRA rank {r} > slot rank {m.A.shape[1]}")
         alpha = float(sd[alpha_key]) if alpha_key in sd else r  # alpha = rank in our training
         m.A.data[slot, :r] = w.to(m.A.dtype)
         m.B.data[slot, :, :r] = up.to(m.B.dtype)
