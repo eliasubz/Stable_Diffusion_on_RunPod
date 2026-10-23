@@ -28,18 +28,19 @@
 - [x] Run 6: profiled training; own loop `train_fast.py` is 2.34× faster per step (cached VAE latents −37%, no grad checkpointing −32%, fused AdamW; 8-bit Adam is slower for LoRA). 250-step LoRA in ~4.0 min vs ~8.8 min on a T4, same quality
 - [x] Run 7: cast fix (no gain), torch.compile (−2%, 5 min compile), time to plateau 220 s → 56 s with 512px / batch 4 / lr 4e-4 (~1.7 min to a usable LoRA on a T4 incl. loading). Batching only helps without grad checkpointing
 - [x] **Production training config: 512px, batch 4, LR 4e-4, 200 images** (fastest, ~56 s on a T4)
-- [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
+- [x] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
 - [x] Run 9: QLoRA: nf4 +45% slower, −1.8 GB only; bnb int8 2.9× slower; an nf4-trained LoRA transfers to the fp16 base. (Its INT8 GEMM result was a layout artifact, corrected by run 10)
 - [x] Run 10: **INT8 GEMM is ~2× fp16 on the T4 with the TN layout** (CUTLASS Turing IMMA kernel; 1.5–1.9× on SDXL FF shapes, ~1× on 640×640 attention projections). fp16 NN (pre-transposed weights) is also 1.4–2.2× faster than TN on FF shapes. Triton has no tensor-core path on sm75
 - [ ] **Research direction (alive): INT8 frozen-base LoRA training on the T4.** INT8 TN GEMMs for the FF layers (forward + input gradient), per-token activation quantization fused by torch.compile, attention in fp16; compare end to end vs fp16 TN and fp16 with pre-transposed weights; then the same on Ampere+ / fp8
 - [ ] Optional: Triton attention-backward kernel for sm75 (≤ ~8% of a step)
-- [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
+- [x] Ship it: `handler.py` (fused LCM, 8 steps, no CFG, resident multi-LoRA slots), Qwen2-VL description in `train.py`, description stored on the pet in the server. Run 11 smoke test passes on a T4
 - [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod): matching torchao build, quantize only transformer-block linears
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
 
 ## Week 4: production numbers, demo, write-up
-- [ ] RunPod endpoints (generation + training) and R2 storage
+- [ ] **RunPod on L4:** build the image via GitHub, generation + training endpoints, Cloudflare R2 for LoRAs
+- [ ] Re-measure on the L4: training sweep (24 GB: maybe 768px / batch 2–4 without checkpointing), bf16, FlashAttention; fp8 / int8 (Ada)
 - [ ] Load test: cold start, p50/p95, autoscaling, cost per 1,000 images; time-to-first-LoRA on a real GPU (target < 3 min)
 - [ ] App: connect `result.tsx` to the server (login, pets, generate, poll)
 - [ ] Image-to-video with Wan 2.2, if there is time
