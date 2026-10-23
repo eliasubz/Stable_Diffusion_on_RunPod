@@ -31,7 +31,8 @@
 - [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess)
 - [ ] Optional deep dives: Triton attention-backward kernel for sm75 (≤ ~8% of a step), W8A8 INT8 matmuls (matmul is 44% of a step)
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
-- [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod)
+- [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
+- [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod): matching torchao build, quantize only transformer-block linears
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
 
 ## Week 4: production numbers, demo, write-up
@@ -42,7 +43,7 @@
 - [ ] Blog post, repo cleanup, demo video
 
 ## Stretch
-- **Multi-LoRA serving:** many users' LoRAs on one GPU, batched (S-LoRA/Punica ideas), with one custom Triton kernel for batched LoRA application
+- **Multi-LoRA serving:** done in PyTorch (run 8). Left: a Triton BGMV kernel, a user-grouping scheduler (fuse only for runs of ≥ 3 images per user), batching on bigger GPUs
 - **Task-specific VLM compression** (descriptions are now part of production, so this is relevant): shrink the pet describer
   - distill Qwen2-VL-2B into a small student on teacher-labeled pet photos
   - task-aware pruning + healing fine-tune (LLM-Pruner / Minitron-style)
