@@ -25,6 +25,8 @@
 - [x] **Production config: LCM-8 + auto description + fused pet LoRA** (4.8 s on a T4, best worst case 0.75, license-safe). Picked visually: Hyper-SD is grainy, Lightning looks painted, DMD2 is non-commercial
 - [x] Run 5 (LCM-8 only): DINO margin vs. real British Shorthairs can't separate LoRA + desc from desc-only (+0.049 vs +0.050). Owner's judgment: the LoRA clearly looks more like Boss. **The LoRA stays in production**; DINO measures breed, not the individual
 - [ ] Individual identity metric (animal re-ID embedding), validated with the real-photo margin test
+- [x] Run 6: profiled training; own loop `train_fast.py` is 2.34× faster per step (cached VAE latents −37%, no grad checkpointing −32%, fused AdamW; 8-bit Adam is slower for LoRA). 250-step LoRA in ~4.0 min vs ~8.8 min on a T4, same quality
+- [ ] Use `train_fast.py` in production `train.py` (replaces the diffusers subprocess), then the next levers: fp16 LoRA / no casts, channels_last, torch.compile, batching
 - [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod)
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
