@@ -1,0 +1,315 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "triton": "3.6.0",
+ "capability": [
+  7,
+  5
+ ],
+ "peak": {
+  "fp16": 65.0,
+  "int8": 130.0
+ },
+ "results": {
+  "square 4096": {
+   "M": 4096,
+   "K": 4096,
+   "N": 4096,
+   "fp16 A@B (row-major B)": {
+    "ms": 6.3879,
+    "tera_ops": 21.5,
+    "pct_of_peak": 33.1,
+    "speedup_vs_fp16": 1.04
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 6.6191,
+    "tera_ops": 20.8,
+    "pct_of_peak": 31.9,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 8.5303,
+    "tera_ops": 16.1,
+    "pct_of_peak": 12.4,
+    "speedup_vs_fp16": 0.78
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 3.2859,
+    "tera_ops": 41.8,
+    "pct_of_peak": 32.2,
+    "speedup_vs_fp16": 2.01
+   },
+   "triton fp16": {
+    "ms": 730.3308,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "512/bs4 ff-in 640": {
+   "M": 4096,
+   "K": 640,
+   "N": 5120,
+   "fp16 A@B (row-major B)": {
+    "ms": 1.0626,
+    "tera_ops": 25.3,
+    "pct_of_peak": 38.9,
+    "speedup_vs_fp16": 1.63
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 1.7309,
+    "tera_ops": 15.5,
+    "pct_of_peak": 23.9,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 2.4305,
+    "tera_ops": 11.0,
+    "pct_of_peak": 8.5,
+    "speedup_vs_fp16": 0.71
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.9707,
+    "tera_ops": 27.7,
+    "pct_of_peak": 21.3,
+    "speedup_vs_fp16": 1.78
+   },
+   "triton fp16": {
+    "ms": 143.5851,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "512/bs4 ff-out 640": {
+   "M": 4096,
+   "K": 2560,
+   "N": 640,
+   "fp16 A@B (row-major B)": {
+    "ms": 0.3058,
+    "tera_ops": 43.9,
+    "pct_of_peak": 67.5,
+    "speedup_vs_fp16": 1.37
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 0.4194,
+    "tera_ops": 32.0,
+    "pct_of_peak": 49.2,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 1.3219,
+    "tera_ops": 10.2,
+    "pct_of_peak": 7.8,
+    "speedup_vs_fp16": 0.32
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.372,
+    "tera_ops": 36.1,
+    "pct_of_peak": 27.8,
+    "speedup_vs_fp16": 1.13
+   },
+   "triton fp16": {
+    "ms": 71.2575,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "512/bs4 attn 640": {
+   "M": 4096,
+   "K": 640,
+   "N": 640,
+   "fp16 A@B (row-major B)": {
+    "ms": 0.0996,
+    "tera_ops": 33.7,
+    "pct_of_peak": 51.8,
+    "speedup_vs_fp16": 0.96
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 0.0956,
+    "tera_ops": 35.1,
+    "pct_of_peak": 54.0,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 0.1598,
+    "tera_ops": 21.0,
+    "pct_of_peak": 16.2,
+    "speedup_vs_fp16": 0.6
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.0942,
+    "tera_ops": 35.6,
+    "pct_of_peak": 27.4,
+    "speedup_vs_fp16": 1.01
+   },
+   "triton fp16": {
+    "ms": 17.9207,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "512/bs4 ff-in 1280": {
+   "M": 1024,
+   "K": 1280,
+   "N": 10240,
+   "fp16 A@B (row-major B)": {
+    "ms": 0.761,
+    "tera_ops": 35.3,
+    "pct_of_peak": 54.3,
+    "speedup_vs_fp16": 2.19
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 1.6643,
+    "tera_ops": 16.1,
+    "pct_of_peak": 24.8,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 2.2992,
+    "tera_ops": 11.7,
+    "pct_of_peak": 9.0,
+    "speedup_vs_fp16": 0.72
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.8918,
+    "tera_ops": 30.1,
+    "pct_of_peak": 23.2,
+    "speedup_vs_fp16": 1.87
+   },
+   "triton fp16": {
+    "ms": 142.8695,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "768/bs1 ff-in 640": {
+   "M": 2304,
+   "K": 640,
+   "N": 5120,
+   "fp16 A@B (row-major B)": {
+    "ms": 0.4655,
+    "tera_ops": 32.4,
+    "pct_of_peak": 49.9,
+    "speedup_vs_fp16": 1.89
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 0.8801,
+    "tera_ops": 17.2,
+    "pct_of_peak": 26.4,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 1.4914,
+    "tera_ops": 10.1,
+    "pct_of_peak": 7.8,
+    "speedup_vs_fp16": 0.59
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.5845,
+    "tera_ops": 25.8,
+    "pct_of_peak": 19.9,
+    "speedup_vs_fp16": 1.51
+   },
+   "triton fp16": {
+    "ms": 80.6341,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  },
+  "768/bs1 attn 640": {
+   "M": 2304,
+   "K": 640,
+   "N": 640,
+   "fp16 A@B (row-major B)": {
+    "ms": 0.0796,
+    "tera_ops": 23.7,
+    "pct_of_peak": 36.5,
+    "speedup_vs_fp16": 0.79
+   },
+   "fp16 A@Wt (TN)": {
+    "ms": 0.0628,
+    "tera_ops": 30.1,
+    "pct_of_peak": 46.2,
+    "speedup_vs_fp16": 1.0
+   },
+   "int8 _int_mm row-major B matches": true,
+   "int8 _int_mm row-major B": {
+    "ms": 0.1065,
+    "tera_ops": 17.7,
+    "pct_of_peak": 13.6,
+    "speedup_vs_fp16": 0.59
+   },
+   "int8 _int_mm TN (col-major B) matches": true,
+   "int8 _int_mm TN (col-major B)": {
+    "ms": 0.0657,
+    "tera_ops": 28.7,
+    "pct_of_peak": 22.1,
+    "speedup_vs_fp16": 0.96
+   },
+   "triton fp16": {
+    "ms": 9.9694,
+    "tera_ops": 0.2,
+    "pct_of_peak": 0.3,
+    "speedup_vs_fp16": 0.01
+   },
+   "triton int8": {
+    "error": "RuntimeError: PassManager::run failed"
+   }
+  }
+ },
+ "kernels": {
+  "square 4096 | fp16 A@B (row-major B)": [
+   "turing_fp16_s1688gemm_fp16_256x128_ldg8_f2f_stages_32x1_nn"
+  ],
+  "square 4096 | fp16 A@Wt (TN)": [
+   "turing_fp16_s1688gemm_fp16_128x128_ldg8_f2f_tn"
+  ],
+  "square 4096 | int8 _int_mm row-major B": [
+   "volta_igemm_int8_128x128_ldg4_nn"
+  ],
+  "square 4096 | int8 _int_mm TN (col-major B)": [
+   "void cutlass::Kernel2<cutlass_75_tensorop_i8816gemm_s8_128x128_tn_align16>(cutlass_75_tensorop_i8816gemm_s8_128x128_tn_align16::Params)"
+  ],
+  "square 4096 | triton fp16": [],
+  "512/bs4 ff-in 640 | fp16 A@B (row-major B)": [],
+  "512/bs4 ff-in 640 | fp16 A@Wt (TN)": [],
+  "512/bs4 ff-in 640 | int8 _int_mm row-major B": [],
+  "512/bs4 ff-in 640 | int8 _int_mm TN (col-major B)": [],
+  "512/bs4 ff-in 640 | triton fp16": []
+ }
+}
