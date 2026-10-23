@@ -21,8 +21,11 @@
 
 ## Week 3: inference speed (in progress)
 - [x] Run 3: fusing (+7%, free), LCM-8 (5.2×, −13% identity), Lightning-4 (8.6×, overrides the pet), torch.compile (+11%, 124 s compile)
-- [ ] Run 4: auto pet description (Qwen2-VL-2B) × {base25, LCM-8, Lightning-4, Hyper-SD-8, DMD2-4}, with worst case and failure rate
-- [ ] Pick the production config; ship fused LoRA + best sampler in `handler.py`
+- [x] Run 4: auto pet description (Qwen2-VL-2B) × {base25, LCM-8, Lightning-4, Hyper-SD-8, DMD2-4}. The description removes all identity failures
+- [x] **Production config: LCM-8 + auto description + fused pet LoRA** (4.8 s on a T4, best worst case 0.75, license-safe). Picked visually: Hyper-SD is grainy, Lightning looks painted, DMD2 is non-commercial
+- [x] Run 5 (LCM-8 only): DINO margin vs. real British Shorthairs can't separate LoRA + desc from desc-only (+0.049 vs +0.050). Owner's judgment: the LoRA clearly looks more like Boss. **The LoRA stays in production**; DINO measures breed, not the individual
+- [ ] Individual identity metric (animal re-ID embedding), validated with the real-photo margin test
+- [ ] Ship it: `handler.py` (LCM scheduler, fused LoRA, 8 steps, no CFG), describe the pet in `train.py`, store the description on the pet in the server
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod)
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
 
@@ -35,13 +38,13 @@
 
 ## Stretch
 - **Multi-LoRA serving:** many users' LoRAs on one GPU, batched (S-LoRA/Punica ideas), with one custom Triton kernel for batched LoRA application
-- **Task-specific VLM compression** (only if run 4 shows that descriptions help): shrink the pet describer
+- **Task-specific VLM compression** (descriptions are now part of production, so this is relevant): shrink the pet describer
   - distill Qwen2-VL-2B into a small student on teacher-labeled pet photos
   - task-aware pruning + healing fine-tune (LLM-Pruner / Minitron-style)
   - vocabulary pruning (~230M of Qwen2's params are embeddings for a 151k vocab)
   - baseline: a CLIP/DINOv2 encoder with classification heads (breed, coat, pattern, fur, eyes) filling a prompt template
   - measure size / latency vs. quality retained, including the downstream identity score of the generated images
-- Run 5 quality fixes: prior preservation, more varied full-body photos, per-photo captions, LoRA trained at 1024px
+- LoRA quality fixes: prior preservation, more varied full-body photos, per-photo captions, LoRA trained at 1024px
 
 ## Small fixes
 - "Joao" admin backdoor in `authService.register`
