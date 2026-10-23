@@ -1,0 +1,198 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu128",
+ "size": 1024,
+ "steps": 8,
+ "torchao_install": "ok",
+ "quant": {
+  "fp16": {
+   "p50_ms": 4036.1,
+   "first_s": 4.8,
+   "peak_mem_gb": 9.62,
+   "unet_param_mb_fp16": 5135.0,
+   "dino_crop": 0.7855,
+   "clip_t": 0.3024,
+   "fidelity": 1.0
+  },
+  "fp16+compile": {
+   "p50_ms": 4273.8,
+   "first_s": 120.4,
+   "peak_mem_gb": 9.61,
+   "unet_param_mb_fp16": 5135.0,
+   "dino_crop": 0.7859,
+   "clip_t": 0.3021,
+   "fidelity": 0.9997
+  },
+  "int8wo": {
+   "p50_ms": 4560.7,
+   "first_s": 4.5,
+   "peak_mem_gb": 7.38,
+   "unet_param_mb_fp16": 5135.0,
+   "dino_crop": -0.0076,
+   "clip_t": 0.1561,
+   "fidelity": -0.0255
+  },
+  "int8wo+compile": {
+   "p50_ms": 3799.0,
+   "first_s": 1059.7,
+   "peak_mem_gb": 7.38,
+   "unet_param_mb_fp16": 5135.0,
+   "dino_crop": -0.0076,
+   "clip_t": 0.1561,
+   "fidelity": -0.0255
+  },
+  "w8a8": {
+   "p50_ms": 17427.5,
+   "first_s": 17.3,
+   "peak_mem_gb": 7.37,
+   "unet_param_mb_fp16": 5135.0,
+   "dino_crop": 0.7868,
+   "clip_t": 0.303,
+   "fidelity": 0.9902
+  },
+  "w8a8+compile": {
+   "error": "e_wrappers.py\", line 966, in inner_fn\n    unwrapped_outs = compiled_fn(unwrapped_args)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py\", line 1011, in inner_fn\n    outs = compiled_fn(args)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_inductor/output_code.py\", line 656, in __call__\n    return self.current_callable(inputs)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_inductor/utils.py\", line 3401, in run\n    out = model(new_inputs)\n  File \"/tmp/torchinductor_root/zd/czdzhpfl62ic5cyij3u55hwccvri2y26mys4j55byh52rpwlrqkn.py\", line 13734, in call\n    extern_kernels._int_mm(buf17, reinterpret_tensor(arg2_1, (320, 1280), (1, 320), 0), out=buf18)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_compile.py\", line 54, in inner\n    return disable_fn(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_dynamo/eval_frame.py\", line 1263, in _fn\n    return fn(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py\", line 409, in __torch_dispatch__\n    res = func(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/_ops.py\", line 865, in __call__\n    return self._op(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\nRuntimeError: self.size(0) needs to be greater than 16, but got 1\n"
+  }
+ },
+ "serving": {
+  "swap_fuse": {
+   "images_per_s": 0.156,
+   "total_s": 102.7,
+   "p50_request_ms": 6202.0,
+   "p95_request_ms": 7013.8,
+   "p50_swap_ms": 1735.1
+  },
+  "unfused_bs1": {
+   "images_per_s": 0.207,
+   "total_s": 77.1,
+   "p50_request_ms": 4768.8,
+   "p95_request_ms": 4980.7,
+   "batch": 1,
+   "peak_mem_gb": 9.82
+  },
+  "multi_bs2": {
+   "images_per_s": 0.197,
+   "total_s": 81.3,
+   "p50_request_ms": 10093.8,
+   "p95_request_ms": 10179.2,
+   "batch": 2,
+   "peak_mem_gb": 11.57
+  },
+  "multi_bs4": {
+   "error": "out of memory",
+   "batch": 4
+  },
+  "same_lora_bs2": {
+   "images_per_s": 0.198,
+   "total_s": 80.7,
+   "p50_request_ms": 10089.6,
+   "p95_request_ms": 10159.5,
+   "batch": 2,
+   "peak_mem_gb": 11.57
+  },
+  "same_lora_bs4": {
+   "error": "out of memory",
+   "batch": 4
+  }
+ },
+ "torchao": "0.10.0",
+ "requests": [
+  {
+   "user": 0,
+   "scene": 0,
+   "seed": 1
+  },
+  {
+   "user": 5,
+   "scene": 2,
+   "seed": 935
+  },
+  {
+   "user": 4,
+   "scene": 1,
+   "seed": 815
+  },
+  {
+   "user": 2,
+   "scene": 2,
+   "seed": 2
+  },
+  {
+   "user": 2,
+   "scene": 1,
+   "seed": 857
+  },
+  {
+   "user": 0,
+   "scene": 2,
+   "seed": 33
+  },
+  {
+   "user": 0,
+   "scene": 3,
+   "seed": 729
+  },
+  {
+   "user": 0,
+   "scene": 3,
+   "seed": 175
+  },
+  {
+   "user": 1,
+   "scene": 0,
+   "seed": 863
+  },
+  {
+   "user": 6,
+   "scene": 0,
+   "seed": 541
+  },
+  {
+   "user": 5,
+   "scene": 0,
+   "seed": 299
+  },
+  {
+   "user": 7,
+   "scene": 1,
+   "seed": 422
+  },
+  {
+   "user": 4,
+   "scene": 1,
+   "seed": 28
+  },
+  {
+   "user": 4,
+   "scene": 0,
+   "seed": 124
+  },
+  {
+   "user": 7,
+   "scene": 0,
+   "seed": 670
+  },
+  {
+   "user": 5,
+   "scene": 2,
+   "seed": 647
+  }
+ ],
+ "multi_lora_layers": 560,
+ "multi_lora_extra_mb": 209.0,
+ "multi_lora_vs_fused": {
+  "bs1": {
+   "mean_abs_pixel_diff": 1.35,
+   "dino_sim_to_fused": 0.9998
+  },
+  "bs2": {
+   "mean_abs_pixel_diff": 2.38,
+   "dino_sim_to_fused": 0.999
+  },
+  "bs4": {
+   "mean_abs_pixel_diff": 1.29,
+   "dino_sim_to_fused": 0.9995
+  }
+ },
+ "total_min": 43.7
+}
