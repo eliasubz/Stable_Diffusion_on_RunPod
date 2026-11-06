@@ -1,6 +1,6 @@
 # Run 2: LoRA training-step sweep vs. IP-Adapter scale (2026-10-22)
 
-Script: `worker/run2.py`, run as a private Kaggle kernel on a Tesla T4 (53 min end to end).
+Script: `research/runs/run02_step_sweep.py`, run as a private Kaggle kernel on a Tesla T4 (53 min end to end).
 
 **Data:** Boss (grey British Shorthair), 8 photos. 6 are for training, and 2 are held out for scoring only (Boss4: indoors on the floor; Boss8: outdoors through a window). IP-Adapter is conditioned on a training photo (Boss2).
 

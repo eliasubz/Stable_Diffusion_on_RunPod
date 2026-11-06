@@ -28,7 +28,8 @@ Training env (any S3-compatible bucket, e.g. Cloudflare R2): `S3_ENDPOINT`, `S3_
 - `handler.py`, `train.py`: the two RunPod handlers
 - `train_fast.py`: training loop (cached latents, fused AdamW, auto bf16/fp16, profiling helpers)
 - `multi_lora.py`: batched multi-LoRA layers for the UNet
+- `lora_kernels.py`: fused Triton multi-LoRA kernels (run 13), used by `multi_lora.py` on Ampere+
 - `describe.py`: Qwen2-VL-2B pet description
 - `common.py`: image loading, S3 upload, fp16 LoRA conversion
-- `train_diffusers.py`: the old diffusers-script trainer (runs 1–2)
-- `run*.py`, `*.ipynb`, `eval/`: experiments
+
+Everything in this folder ships in the image; experiments live in `../research/`.

@@ -27,7 +27,7 @@ def log(msg):
 
 
 def find(name):
-    for root in ["/kaggle/input", os.path.dirname(os.path.abspath(__file__))]:
+    for root in ["/kaggle/input", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")]:  # repo root
         hits = glob.glob(f"{root}/**/{name}", recursive=True)
         if hits:
             return hits[0]

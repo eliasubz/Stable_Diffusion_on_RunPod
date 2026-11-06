@@ -1,5 +1,6 @@
-worker/test_images/
+research/test_images/
 worker/loras/
+research/legacy/train_dreambooth_lora_sdxl.py
 worker/train_dreambooth_lora_sdxl.py
 __pycache__/
 *.safetensors

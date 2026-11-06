@@ -44,7 +44,7 @@ def log(msg):
 
 def find(name):
     """Locate a file in the attached Kaggle dataset (mount paths vary) or next to this script."""
-    for root in ["/kaggle/input", os.path.dirname(os.path.abspath(__file__))]:
+    for root in ["/kaggle/input", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")]:  # repo root
         hits = glob.glob(f"{root}/**/{name}", recursive=True)
         if hits:
             return hits[0]
@@ -59,6 +59,8 @@ WORK = "/tmp/worker"
 shutil.copytree(src_dir, WORK, dirs_exist_ok=True, ignore=shutil.ignore_patterns("test_images", "*.ipynb"))
 shutil.copy(find("identity.py"), WORK)
 sys.path.insert(0, WORK)
+shutil.copytree(os.path.dirname(find("identity.py")), f"{WORK}/eval", dirs_exist_ok=True)  # research/eval
+shutil.copy(find("train_diffusers.py"), WORK)  # research/legacy
 os.chdir(WORK)
 
 log("installing pinned requirements")

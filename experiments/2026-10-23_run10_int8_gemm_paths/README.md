@@ -1,6 +1,6 @@
 # Run 10: INT8 vs fp16 GEMM paths on a T4 (2026-10-23)
 
-Script: `worker/run10.py`, a microbenchmark run as a private Kaggle kernel on a Tesla T4 (sm75), torch 2.11, triton 3.6. CUDA-event timing, 50 iterations after 5 warm-ups.
+Script: `research/runs/run10_int8_gemm_paths.py`, a microbenchmark run as a private Kaggle kernel on a Tesla T4 (sm75), torch 2.11, triton 3.6. CUDA-event timing, 50 iterations after 5 warm-ups.
 
 ## Which kernel runs (M = K = N = 4096)
 

@@ -56,7 +56,7 @@ def log(msg):
 
 
 def find(name):
-    for root in ["/kaggle/input", os.path.dirname(os.path.abspath(__file__))]:
+    for root in ["/kaggle/input", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")]:  # repo root
         hits = glob.glob(f"{root}/**/{name}", recursive=True)
         if hits:
             return hits[0]
@@ -70,6 +70,7 @@ shutil.copytree(os.path.dirname(find("train.py")), WORK, dirs_exist_ok=True,
                 ignore=shutil.ignore_patterns("test_images", "*.ipynb"))
 shutil.copy(find("train_fast.py"), WORK)
 sys.path.insert(0, WORK)
+shutil.copytree(os.path.dirname(find("identity.py")), f"{WORK}/eval", dirs_exist_ok=True)  # research/eval
 os.chdir(WORK)
 log("installing pinned requirements (+ latest bitsandbytes for 8-bit Adam)")
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r", "requirements.txt"], check=True)

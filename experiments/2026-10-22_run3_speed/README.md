@@ -1,6 +1,6 @@
 # Run 3: inference speed vs. quality with a pet LoRA (2026-10-22)
 
-Script: `worker/run3.py`, run as a private Kaggle kernel on a Tesla T4 (23 min). Uses Boss's 250-step DreamBooth-LoRA from run 2 at scale 0.9. Generation at 1024px, 4 scenes × 3 seeds. Latency is measured warm, with one warm-up image per config excluded. Identity is DINO on a pet crop against held-out photos; prompt adherence is CLIP-T.
+Script: `research/runs/run03_speed.py`, run as a private Kaggle kernel on a Tesla T4 (23 min). Uses Boss's 250-step DreamBooth-LoRA from run 2 at scale 0.9. Generation at 1024px, 4 scenes × 3 seeds. Latency is measured warm, with one warm-up image per config excluded. Identity is DINO on a pet crop against held-out photos; prompt adherence is CLIP-T.
 
 | config | p50 | speedup | DINO (crop) | CLIP-T | notes |
 |---|---|---|---|---|---|

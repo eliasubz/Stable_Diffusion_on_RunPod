@@ -12,11 +12,14 @@ Random rank-8 LoRAs (timing doesn't depend on values). Runs unattended on Kaggle
 """
 import itertools
 import json
+import os
+import sys
 
 import torch
 import triton
 from diffusers import UNet2DConditionModel
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "worker"))
 import lora_kernels as lk
 import multi_lora as ml
 

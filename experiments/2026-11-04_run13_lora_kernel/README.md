@@ -1,6 +1,6 @@
 # Runs 12–13: is multi-LoRA a bottleneck, and does a fused Triton kernel fix it? (2026-11-03/06)
 
-Scripts: `worker/run12_lora_profile.py`, `worker/run13_lora_kernel.py`, kernel in `worker/lora_kernels.py`. Tesla T4 (private Kaggle kernels) and NVIDIA L4 (RunPod secure pod, ~$0.015 incl. two failed starts), SDXL UNet at 1024px, random rank-8 LoRAs. Run 12's results: `../2026-11-03_run12_lora_profile/results.json`.
+Scripts: `research/runs/run12_lora_profile.py`, `research/runs/run13_lora_kernel.py`, kernel in `worker/lora_kernels.py`. Tesla T4 (private Kaggle kernels) and NVIDIA L4 (RunPod secure pod, ~$0.015 incl. two failed starts), SDXL UNet at 1024px, random rank-8 LoRAs. Run 12's results: `../2026-11-03_run12_lora_profile/results.json`.
 
 ## The kernel
 

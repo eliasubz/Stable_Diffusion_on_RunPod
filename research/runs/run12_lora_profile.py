@@ -11,11 +11,14 @@ plus the ideal per-layer cost if the LoRA were fused (read x once, read+write y 
 Random LoRA weights: timing doesn't depend on values. Runs unattended on Kaggle, writes results.json.
 """
 import json
+import os
+import sys
 import time
 
 import torch
 from diffusers import UNet2DConditionModel
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "worker"))
 import multi_lora as ml
 
 RANK, ITERS, WARMUP = 8, 20, 5

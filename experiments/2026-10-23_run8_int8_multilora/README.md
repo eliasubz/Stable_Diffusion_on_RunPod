@@ -1,6 +1,6 @@
 # Run 8: INT8 and multi-LoRA serving (2026-10-23)
 
-Script: `worker/run8.py` + `worker/multi_lora.py`, run as a private Kaggle kernel on a Tesla T4 (44 min). Production generation: SDXL + LCM-LoRA (8 steps, guidance 1) + Boss's 250-step LoRA (0.9) + auto description, 1024px.
+Script: `research/runs/run08_int8_multilora.py` + `worker/multi_lora.py`, run as a private Kaggle kernel on a Tesla T4 (44 min). Production generation: SDXL + LCM-LoRA (8 steps, guidance 1) + Boss's 250-step LoRA (0.9) + auto description, 1024px.
 
 ## A. INT8 on the UNet (torchao 0.10 on torch 2.11)
 

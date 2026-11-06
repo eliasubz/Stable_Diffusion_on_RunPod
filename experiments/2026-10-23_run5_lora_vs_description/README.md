@@ -1,6 +1,6 @@
 # Run 5: is it Boss, or just a grey British Shorthair? (2026-10-23)
 
-Script: `worker/run5.py`, run as a private Kaggle kernel on a Tesla T4 (10 min). Production sampler only: LCM-8, fused LoRAs, 1024px, 4 scenes × 3 seeds.
+Script: `research/runs/run05_lora_vs_description.py`, run as a private Kaggle kernel on a Tesla T4 (10 min). Production sampler only: LCM-8, fused LoRAs, 1024px, 4 scenes × 3 seeds.
 
 **Question:** run 4's description ("British Shorthair, gray, short, yellow") removed all identity failures. Does the pet LoRA still add anything, or does the description just produce the breed?
 

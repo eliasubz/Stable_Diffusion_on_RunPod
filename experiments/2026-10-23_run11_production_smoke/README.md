@@ -1,6 +1,6 @@
 # Run 11: smoke test of the production worker code (2026-10-23)
 
-Script: `worker/run11_smoke.py`, run as a private Kaggle kernel on a Tesla T4. It calls `train.train` and `handler.handler` exactly as RunPod would, on Boss's 6 training photos.
+Script: `research/runs/run11_production_smoke.py`, run as a private Kaggle kernel on a Tesla T4. It calls `train.train` and `handler.handler` exactly as RunPod would, on Boss's 6 training photos.
 
 Result: both handlers work end to end.
 

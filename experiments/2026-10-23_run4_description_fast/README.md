@@ -1,6 +1,6 @@
 # Run 4: auto pet description + modern distillation LoRAs (2026-10-23)
 
-Script: `worker/run4.py`, run as a private Kaggle kernel on a Tesla T4 (22 min). Uses Boss's 250-step LoRA (fused, scale 0.9). Generation at 1024px, 4 scenes × 3 seeds. Identity is DINO on a pet crop against held-out photos; "fail" means identity < 0.4. CLIP-T is scored against the plain scene prompt.
+Script: `research/runs/run04_description_fast.py`, run as a private Kaggle kernel on a Tesla T4 (22 min). Uses Boss's 250-step LoRA (fused, scale 0.9). Generation at 1024px, 4 scenes × 3 seeds. Identity is DINO on a pet crop against held-out photos; "fail" means identity < 0.4. CLIP-T is scored against the plain scene prompt.
 
 **Auto description** (Qwen2-VL-2B-Instruct, 4 training photos, fp16 on a T4): `British Shorthair, gray, short, yellow`. The model took 34 s to load and 12 s to generate.
 

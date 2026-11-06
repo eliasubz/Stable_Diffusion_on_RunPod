@@ -1,6 +1,6 @@
 # Run 6: profiling and speeding up DreamBooth-LoRA training (2026-10-23)
 
-Script: `worker/run6.py` with our own training loop `worker/train_fast.py`, run as a private Kaggle kernel on a Tesla T4 (15 min). 768px, rank 8, batch 1, 6 photos, fp16 autocast + loss scaling in every config. Times are the mean of 20 synced steps after 5 warm-up steps.
+Script: `research/runs/run06_training_speed.py` with our own training loop `worker/train_fast.py`, run as a private Kaggle kernel on a Tesla T4 (15 min). 768px, rank 8, batch 1, 6 photos, fp16 autocast + loss scaling in every config. Times are the mean of 20 synced steps after 5 warm-up steps.
 
 ## Benchmark (ms per step)
 

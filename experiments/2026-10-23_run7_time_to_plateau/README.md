@@ -1,6 +1,6 @@
 # Run 7: cast fix, torch.compile, and time to plateau (2026-10-23)
 
-Script: `worker/run7.py` with `worker/train_fast.py`, run as a private Kaggle kernel on a Tesla T4 (66 min).
+Script: `research/runs/run07_time_to_plateau.py` with `worker/train_fast.py`, run as a private Kaggle kernel on a Tesla T4 (66 min).
 
 ## Part 1: step speed (768px, batch 1, cached latents/text, fused AdamW, no grad checkpointing)
 
