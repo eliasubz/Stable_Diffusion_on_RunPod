@@ -1,0 +1,98 @@
+{
+ "gpu": "Tesla T4",
+ "torch": "2.11.0+cu130",
+ "base": {
+  "bs": 1,
+  "p50_ms": 406.149169921875,
+  "min_ms": 399.0887451171875,
+  "ms_per_image": 406.149169921875
+ },
+ "base_bs2": {
+  "bs": 2,
+  "p50_ms": 801.9222412109375,
+  "min_ms": 778.4202270507812,
+  "ms_per_image": 400.96112060546875
+ },
+ "lora_layers": 560,
+ "layer_shapes": [
+  [
+   640,
+   640
+  ],
+  [
+   1280,
+   1280
+  ],
+  [
+   2048,
+   640
+  ],
+  [
+   2048,
+   1280
+  ]
+ ],
+ "wrapped_off": {
+  "bs": 1,
+  "p50_ms": 440.1474914550781,
+  "min_ms": 432.7874450683594,
+  "ms_per_image": 440.1474914550781
+ },
+ "lora_bs1": {
+  "bs": 1,
+  "p50_ms": 492.63616943359375,
+  "min_ms": 484.7325134277344,
+  "ms_per_image": 492.63616943359375
+ },
+ "lora_bs2": {
+  "bs": 2,
+  "p50_ms": 1012.87939453125,
+  "min_ms": 966.2056274414062,
+  "ms_per_image": 506.439697265625
+ },
+ "lora_bs1_extra_ms_by_op": {
+  "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})": 18.262,
+  "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<c10::Half>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<c10::Half>, std::array<char*, 3ul>)": 14.252,
+  "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1}>(long, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1})": 14.108,
+  "void cutlass::Kernel2<cutlass_75_wmma_tensorop_f16_s161616gemm_f16_16x16_128x2_tn_align8>(cutlass_75_wmma_tensorop_f16_s161616gemm_f16_16x16_128x2_tn_align8::Params)": 9.678,
+  "turing_fp16_s1688gemm_fp16_128x128_ldg8_f2f_stages_32x1_tn": 8.704,
+  "void cutlass::Kernel2<cutlass_75_tensorop_s1688gemm_f16_64x64_tn_align8>(cutlass_75_tensorop_s1688gemm_f16_64x64_tn_align8::Params)": 1.281,
+  "volta_fp16_s884gemm_fp16_64x64_ldg8_f2f_tn": 1.052,
+  "void cublasLt::splitKreduce_kernel<32, 16, int, float, __half, float, __half, false, __half, __half, __half, true, false, false, false>(cublasLt::cublasSplitKParams<float>, float const*, __half const*, __half*, __half*, float const*, float const*, __half const*, float const*, __half*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)": 0.582,
+  "_5x_cudnn_turing_fp16_s1688cudnn_fp16_128x128_ldg8_relu_f2f_exp_large_nhwc_tn_v1": 0.081,
+  "void implicit_convolve_sgemm<__half, __half, int, 128, 5, 5, 3, 3, 3, 1, false, false, true>(int, int, int, __half const*, int, __half*, __half const*, kernel_conv_params, unsigned long long, int, float, float, int, __half const*, __half const*, bool, bool, int, int)": -0.061,
+  "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_relu_filter1x1_stg8_interior_nchw_nn_v1": -0.07,
+  "void cublasLt::splitKreduce_kernel<32, 16, int, __half, __half, float, __half, false, __half, __half, __half, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __half const*, __half const*, __half*, __half*, float const*, float const*, __half const*, __half const*, __half*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)": -0.084,
+  "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})": -0.101,
+  "turing_fp16_s1688gemm_fp16_256x128_ldg8_f2f_stages_32x1_nn": -0.138,
+  "turing_fp16_s1688gemm_fp16_128x256_ldg8_f2f_stages_32x1_tt": -0.164,
+  "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::(anonymous namespace)::GroupNormKernelImplInternal<c10::Half>(at::Tensor const&, at::Tensor const&, at::Tensor const&, long, long, long, long, c10::Half, at::Tensor&, at::Tensor&, at::Tensor&)::{lambda(c10::Half, float, float)#1}>(at::TensorIteratorBase&, at::native::(anonymous namespace)::GroupNormKernelImplInternal<c10::Half>(at::Tensor const&, at::Tensor const&, at::Tensor const&, long, long, long, long, c10::Half, at::Tensor&, at::Tensor&, at::Tensor&)::{lambda(c10::Half, float, float)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::(anonymous namespace)::GroupNormKernelImplInternal<c10::Half>(at::Tensor const&, at::Tensor const&, at::Tensor const&, long, long, long, long, c10::Half, at::Tensor&, at::Tensor&, at::Tensor&)::{lambda(c10::Half, float, float)#1}>(at::TensorIteratorBase&, at::native::(anonymous namespace)::GroupNormKernelImplInternal<c10::Half>(at::Tensor const&, at::Tensor const&, at::Tensor const&, long, long, long, long, c10::Half, at::Tensor&, at::Tensor&, at::Tensor&)::{lambda(c10::Half, float, float)#1} const&)::{lambda(int)#1})": -0.209,
+  "turing_fp16_s1688gemm_fp16_128x256_ldg8_relu_f2f_tn": -0.263,
+  "void at::native::(anonymous namespace)::RowwiseMomentsCUDAKernel<c10::Half>(long, c10::Half, c10::Half const*, c10::Half*, c10::Half*)": -0.311,
+  "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::Half> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<c10::Half> const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::Half> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<c10::Half> const&)::{lambda(int)#1})": -0.321,
+  "void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul> >(int, at::native::BUnaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul>)": -0.323,
+  "_5x_cudnn_turing_fp16_s1688cudnn_fp16_128x128_ldg8_relu_f2f_exp_medium_nhwc_tn_v1": -0.338,
+  "turing_fp16_s1688gemm_fp16_128x256_ldg8_f2f_stages_32x1_tn": -0.453,
+  "sm75_xmma_fprop_implicit_gemm_indexed_f16f16_f16f32_f32_nhwckrsc_nhwc_tilesize256x128x32_stage1_warpsize4x2x1_g1_tensor16x8x8_execute_kernel__5x_cudnn": -0.7,
+  "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x64_sliced1x2_ldg8_relu_f2f_exp_small_nhwc_tn_v1": -0.721,
+  "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#3}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#3}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#3}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#3}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})": -0.782,
+  "void at::native::(anonymous namespace)::vectorized_layer_norm_kernel<c10::Half, float, false>(int, float, c10::Half const*, c10::Half const*, c10::Half const*, float*, float*, c10::Half*)": -0.856,
+  "sm75_xmma_fprop_implicit_gemm_f16f16_f16f32_f32_nhwckrsc_nhwc_tilesize128x128x32_stage1_warpsize2x2x1_g1_tensor16x8x8_execute_kernel__5x_cudnn": -0.928,
+  "_5x_cudnn_turing_fp16_s1688cudnn_fp16_256x128_ldg8_relu_f2f_exp_large_nhwc_tn_v1": -1.496,
+  "void cudnn::engines_precompiled::nchwToNhwcKernel<__half, __half, float, false, true, (cudnnKernelDataType_t)0>(cudnn::engines_precompiled::nchw2nhwc_params_t<float>, __half const*, __half*)": -1.856,
+  "sm75_xmma_fprop_implicit_gemm_f16f16_f16f32_f32_nhwckrsc_nhwc_tilesize128x128x64_stage1_warpsize2x2x1_g1_tensor16x8x8_t1r3s3_execute_kernel__5x_cudnn": -2.177,
+  "turing_fp16_s1688gemm_fp16_256x128_ldg8_f2f_tn": -3.518,
+  "turing_fp16_s1688gemm_fp16_256x128_ldg8_relu_f2f_tn": -5.388,
+  "fmha_cutlassF_f16_aligned_64x64_rf_sm75(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm75, true, 64, 64, 64, true, true>::Params)": -8.39,
+  "turing_fp16_s1688gemm_fp16_128x256_ldg8_relu_f2f_stages_32x1_tn": -8.522
+ },
+ "lora_bs1_total_cuda_ms": 537.0420946666633,
+ "wrapped_off_total_cuda_ms": 507.3484103333339,
+ "ideal_fused_GB_per_step": 3.7748736,
+ "verdict": {
+  "lora_overhead_ms_per_step": 86.48699951171875,
+  "lora_overhead_pct": 17.555958104163725,
+  "lora_overhead_s_per_image_8_steps": 0.69189599609375,
+  "bs2_overhead_pct": 20.827470127175534
+ }
+}

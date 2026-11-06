@@ -35,6 +35,8 @@
 - [ ] Optional: Triton attention-backward kernel for sm75 (≤ ~8% of a step)
 - [x] Ship it: `handler.py` (fused LCM, 8 steps, no CFG, resident multi-LoRA slots), Qwen2-VL description in `train.py`, description stored on the pet in the server. Run 11 smoke test passes on a T4
 - [x] Run 8: multi-LoRA serving (`multi_lora.py`): resident LoRAs +33% throughput vs swap+fuse, ~26 MB/user, matches fused output; batching gives nothing on a T4 at 1024px. INT8 on the T4: weight-only NaN (torchao/torch mismatch), W8A8 correct but 4.3× slower eagerly
+- [x] Run 12: LoRA-path profile. Looked like 17.6% of a UNet step, but the T4 throttles (full clock → 945 MHz at 76 °C): measured round-robin it's **6.9% (30 ms/step)**. All sequential T4 timings (runs 8, 12) are biased
+- [x] Run 13: fused Triton multi-LoRA kernel (`lora_kernels.py`, split-K shrink + in-place expand, slot lookup in-kernel). Correct (cosine 1.0000 vs PyTorch). **L4: removes 70–75% of the LoRA overhead, 1.074× per UNet step at bs1, 1.087× at bs4**; at parity on the T4 (no Triton tensor cores). On by default on Ampere+
 - [ ] fp8 / int8 row on an L4 / 4090 / H100 (RunPod): matching torchao build, quantize only transformer-block linears
 - [ ] Quality vs. latency vs. $/image table (needs RunPod prices and timings)
 
@@ -47,7 +49,7 @@
 - [ ] Blog post, repo cleanup, demo video
 
 ## Stretch
-- **Multi-LoRA serving:** done in PyTorch (run 8). Left: a Triton BGMV kernel, a user-grouping scheduler (fuse only for runs of ≥ 3 images per user), batching on bigger GPUs
+- **Multi-LoRA serving:** done in PyTorch (run 8), Triton SGMV kernel 1.07–1.09× on an L4 (run 13). Left: a user-grouping scheduler (fuse only for runs of ≥ 3 images per user), batching on bigger GPUs
 - **Task-specific VLM compression** (descriptions are now part of production, so this is relevant): shrink the pet describer
   - distill Qwen2-VL-2B into a small student on teacher-labeled pet photos
   - task-aware pruning + healing fine-tune (LLM-Pruner / Minitron-style)
@@ -57,8 +59,10 @@
 - LoRA quality fixes: prior preservation, more varied full-body photos, per-photo captions, LoRA trained at 1024px
 
 ## Small fixes
-- "Joao" admin backdoor in `authService.register`
-- Delete `src/index.js` (old entry point, hardcoded secret)
+- [x] "Joao" admin backdoor in `authService.register`
+- [x] Delete `src/index.js` (old entry point, hardcoded secret)
+- [x] Auth hardening: no default JWT secret, same login error for unknown email / wrong password, `Bearer` tokens, 409 on duplicate signup, validator v7 field names
+- `GET /veo3/buy_credit` gives 5 free credits to any logged-in user (needs payments or admin-only)
 - ~14 s polling overhead between the server and the worker
 - Signed URLs for pet photos before any real launch
 - DMD2 is CC-BY-NC: research only, not for the paid app

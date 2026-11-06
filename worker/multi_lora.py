@@ -8,18 +8,45 @@ sample of the batch and apply it with two batched matmuls:
 
 Slot 0 is an all-zero LoRA ("no LoRA"). Loads diffusers-format LoRA files as saved by train_fast.py /
 the diffusers training script (keys "unet.<module>.lora.down.weight" / ".lora.up.weight").
+
+The LoRA term runs as fused Triton kernels (lora_kernels.py) on Ampere and newer: run 13 on an L4 removes
+70% of the LoRA overhead (1.07x per UNet step at bs1, 1.09x at bs4). On a T4 (no Triton tensor cores) it only
+matches PyTorch, so it stays off there. MULTI_LORA_TRITON=1/0 overrides. A batch where every sample is on slot 0 skips LoRA work entirely.
 """
+import os
+
 import torch
 import torch.nn as nn
 from safetensors.torch import load_file
+
+try:
+    from lora_kernels import fused_lora_
+except ImportError:  # no Triton (CPU, macOS): PyTorch path only
+    fused_lora_ = None
+_AMPERE_PLUS = torch.cuda.is_available() and torch.cuda.get_device_capability() >= (8, 0)
+USE_TRITON = os.environ.get("MULTI_LORA_TRITON", "1" if _AMPERE_PLUS else "0") == "1" and fused_lora_ is not None
 
 TARGETS = ("to_q", "to_k", "to_v", "to_out.0")
 
 
 class Selector:
-    """Shared holder for the per-sample adapter index of the current batch."""
+    """Shared holder for the per-sample adapter index of the current batch.
 
-    idx = None
+    Set once per request (`selector.idx = tensor([slot, ...])` or None); the setter checks on the CPU
+    whether any sample uses a real LoRA, so the layers don't sync per call.
+    """
+
+    def __init__(self):
+        self._idx, self.active = None, False
+
+    @property
+    def idx(self):
+        return self._idx
+
+    @idx.setter
+    def idx(self, value):
+        self._idx = None if value is None else value.to(torch.int32)
+        self.active = value is not None and bool((value != 0).any())
 
 
 class MultiLoRALinear(nn.Module):
@@ -33,9 +60,13 @@ class MultiLoRALinear(nn.Module):
 
     def forward(self, x):
         y = self.base(x)
-        idx = self.selector.idx
-        if idx is None:
+        if not self.selector.active:
             return y
+        idx = self.selector.idx
+        if USE_TRITON and x.is_cuda and not torch.is_grad_enabled():
+            if x.dim() == 2:
+                return fused_lora_(y[:, None], x[:, None], self.A, self.B, self.scale, idx)[:, 0]
+            return fused_lora_(y, x, self.A, self.B, self.scale, idx)
         a, b = self.A[idx], self.B[idx]  # [batch, r, in], [batch, out, r]
         squeeze = x.dim() == 2
         xs = x[:, None, :] if squeeze else x  # [batch, tokens, in]

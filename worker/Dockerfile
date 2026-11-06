@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY download_weights.py .
 RUN python download_weights.py
 
-COPY common.py multi_lora.py train_fast.py describe.py handler.py train.py ./
+COPY common.py multi_lora.py lora_kernels.py train_fast.py describe.py handler.py train.py ./
 
 # Generation endpoint by default. For the training endpoint, set the container start command to
 # `python -u train.py` in the RunPod endpoint settings (same image, no second build).
